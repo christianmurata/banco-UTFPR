@@ -9,7 +9,7 @@ int conta;
 char tipoMov;
 char tipoConta;
 char DataMov[10];
-char Dataabertura[9];
+char Dataabertura[10];
 
 double valorMov;
 double saldoAtual;
@@ -30,7 +30,9 @@ struct regCCorrente *proxConta;
 typedef struct regCCorrente RegCCorrente;
 typedef RegCCorrente *RegCCorrentePtr;
 
+void addZero(char[2]);
 void formataData(char[10], char[10]);
+void dataAtual(char[10], int, int, int);
 
 void imprime(RegCCorrentePtr);
 
@@ -40,23 +42,23 @@ void insereDadosPessoais(RegCCorrentePtr *);
 
 int main(void)
 {
+    char data[10];
+
     // get data atual
     time_t date = time(NULL);
     struct tm tm = *localtime(&date);
 
-    printf("now: %d/%d/%d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-
-
-    char data[10] = {'2', '6', '/', '0', '4', '/', '2', '0', '1', '9'};
-    // printf("%s", data);
+    // data (int) to data (char)
+    dataAtual(data, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 
     // inicializa a lista encadeada
     RegCCorrentePtr contas = NULL;
 
     // insere algumas contas, de exemplo
-
     insereConta(&contas, 1, data, 0);
+    insereConta(&contas, 2, data, 0);
 
+    // imprime as contas
     imprime(contas);
 
     return 0;
@@ -76,8 +78,8 @@ void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10]
     novaConta->saldoAtual       = depositoInicial;
     novaConta->depositoInicial  = depositoInicial;
     
-    formataData(novaConta->Dataabertura, dataAbertura);
-
+    // formataData(novaConta->Dataabertura, dataAbertura);
+    sprintf(novaConta->Dataabertura, "%s", dataAbertura);
 
     novaConta->proxConta = *novaContaPtr;   /* O endereco da proxConta, nesse
                                             caso, eh referente ao endereco da
@@ -123,7 +125,7 @@ void imprime(RegCCorrentePtr contaAtual){
         return;
     }
 
-    printf("\n---------------------- Dados Pessoais -------------------------");
+    printf("\n\n---------------------- Dados Pessoais -----------------------");
     printf("\nNome              : %s", contaAtual->DadosPessoais.nome);
     printf("\nRG                : %s", contaAtual->DadosPessoais.rg);
     printf("\nCPF               : %s", contaAtual->DadosPessoais.cpf);
@@ -131,7 +133,7 @@ void imprime(RegCCorrentePtr contaAtual){
 
 
     // imprime os dados da conta
-    printf("\n---------------------- Dados da conta -------------------------");    
+    printf("\n------------------------ Dados da conta -----------------------");    
     printf("\nNumero da Conta : %d",   contaAtual->conta);
     printf("\nData Abertura   : %s",   contaAtual->Dataabertura);
     printf("\nSaldo atual     : %.2f", contaAtual->saldoAtual);
@@ -149,4 +151,40 @@ void imprime(RegCCorrentePtr contaAtual){
 void formataData(char data[10], char dataAbertura[10]){
     for(int dt = 0; dt < 10; dt++)
         data[dt] = dataAbertura[dt];
+}
+
+void addZero(char data[2]){
+    data[1] = data[0];
+    data[0] = '0';
+}
+
+void dataAtual(char data[10], int dia, int mes, int ano){
+    char d[2], m[2], a[4];
+
+    itoa(dia, d, 10);
+    itoa(mes, m, 10);
+    itoa(ano, a, 10);
+
+    if(dia < 9)
+        addZero(d);
+
+    if(mes < 9)
+        addZero(m);
+
+    for(int dt = 0; dt < 10; dt++){
+        if(dt < 2)
+            data[dt] = d[dt];
+
+        else if(dt == 2)
+            data[dt] = '/';
+
+        else if(dt > 2 && dt < 5)
+            data[dt] = m[dt - 3];
+
+        else if(dt == 5)
+            data[dt] = '/';
+        
+        else
+            data[dt] = a[dt - 6];
+    }
 }
