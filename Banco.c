@@ -90,7 +90,8 @@ void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10]
         novaConta->saldoAtual       = depositoInicial;
         novaConta->depositoInicial  = depositoInicial;
 
-        formataData(novaConta->Dataabertura, dataAbertura);
+        // formataData(novaConta->Dataabertura, dataAbertura);	
+        sprintf(novaConta->Dataabertura, "%s", dataAbertura);
 
         Contaatual = *novaContaPtr;
 
