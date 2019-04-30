@@ -15,7 +15,7 @@ double valorMov;
 double saldoAtual;
 double depositoInicial;
 
-struct dadosPessoais {        /*Sub-Struct que contem os dados pessoais da conta*/
+struct dadosPessoais { /*Sub-Struct que contem os dados pessoais da conta*/
     char nome[40];
     char senha[6];
     char cpf[12];
@@ -30,7 +30,9 @@ struct regCCorrente *proxConta;
 typedef struct regCCorrente RegCCorrente;
 typedef RegCCorrente *RegCCorrentePtr;
 
+void addZero(char[2]);
 void formataData(char[10], char[10]);
+void dataAtual(char[10], int, int, int);
 
 void imprime(RegCCorrentePtr);
 
@@ -42,36 +44,32 @@ void excluiCCorrente (RegCCorrentePtr* , int);
 
 int main(void)
 {
+    char data[10];
+
     // get data atual
     time_t date = time(NULL);
     struct tm tm = *localtime(&date);
 
-    printf("now: %d/%d/%d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-
-
-    char data[10] = {'2', '6', '/', '0', '4', '/', '2', '0', '1', '9'};
-    // printf("%s", data);
+    // data (int) to data (char)
+    dataAtual(data, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 
     // inicializa a lista encadeada
     RegCCorrentePtr contas = NULL;
 
     // insere algumas contas, de exemplo
-
     insereConta(&contas, 14, data, 0);
     insereConta(&contas, 3, data, 0);
     insereConta(&contas, 1, data, 0);
 
-
-
+    // teste de exclusão
     imprime(contas);
     excluiCCorrente(&contas,1);
     imprime(contas);
 
-
     return 0;
 }
 
-void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10],double depositoInicial)
+void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10], double depositoInicial)
 {
     RegCCorrentePtr novaConta;//Nova conta a ser criada
 
@@ -79,46 +77,47 @@ void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10]
 
     RegCCorrentePtr Contaanterior;
 
-
-
     novaConta = malloc(sizeof(RegCCorrente)); //Aloca memoria para a proxima conta
 
-    if(novaConta!=NULL){//Verifica se existe memoria disponivel
+    //Verifica se existe memoria disponivel
+    if(novaConta!=NULL){
+        
+        // leitura dos dados pessoais
+        insereDadosPessoais(&novaConta);
 
-    // leitura dos dados pessoais
-    insereDadosPessoais(&novaConta);
+        // cria a nova conta
+        novaConta->conta            = conta;
+        novaConta->saldoAtual       = depositoInicial;
+        novaConta->depositoInicial  = depositoInicial;
 
-    // cria a nova conta
-    novaConta->conta            = conta;
-    novaConta->saldoAtual       = depositoInicial;
-    novaConta->depositoInicial  = depositoInicial;
+        formataData(novaConta->Dataabertura, dataAbertura);
 
-    formataData(novaConta->Dataabertura, dataAbertura);
+        Contaatual = *novaContaPtr;
 
+        novaConta->proxConta = NULL;
+        Contaanterior        = NULL;
 
-    novaConta->proxConta=NULL;
-    Contaanterior=NULL;
-    Contaatual=*novaContaPtr;
+        // Encontra o lugar da conta baseado em sem numero
+        // Ordena em ordem crescente por numero da conta
+        while(Contaatual!=NULL&&conta > Contaatual->conta)
+        {
+            Contaanterior=Contaatual;
+            Contaatual=Contaatual->proxConta;
+        }
 
-    while(Contaatual!=NULL&&conta > Contaatual->conta) // Encontra o lugar da conta baseado em sem numero
-    {                                                  // Ordena em ordem crescente por numero da conta
-        Contaanterior=Contaatual;
-        Contaatual=Contaatual->proxConta;
-    }
+        if(Contaanterior == NULL){
 
-    if(Contaanterior==NULL){
-
-    novaConta->proxConta = *novaContaPtr;
+            novaConta->proxConta = *novaContaPtr;
 
 
-    *novaContaPtr = novaConta;
-    }
+            *novaContaPtr = novaConta;
+        }
 
-    else
-    {
-        Contaanterior->proxConta=novaConta;
-        novaConta->proxConta=Contaatual;
-    }
+        else
+        {
+            Contaanterior->proxConta=novaConta;
+            novaConta->proxConta=Contaatual;
+        }
     }
 
     else//caso não houver memoria
@@ -156,6 +155,47 @@ void insereDadosPessoais(RegCCorrentePtr *dadosPessoa)
     fflush(stdin);
 }
 
+void excluiCCorrente (RegCCorrentePtr *Headlista, int nconta)
+{
+   RegCCorrentePtr percorreconta;
+   RegCCorrentePtr contaAnterior;
+   RegCCorrentePtr lixo;
+   if(Headlista==NULL) //Caso da lista estar vazia
+   {
+       printf("Nao ha contas registradas");
+       exit(0);
+
+   }
+
+   //Deleta primeira conta da lista
+  if (nconta == (*Headlista)->conta)
+
+   {
+       RegCCorrentePtr aux;
+       aux= *Headlista;
+       *Headlista=(*Headlista)->proxConta;
+       free(aux);
+
+   }
+
+    /* Deleta a conta caso ela nao esteja no comeco da lista*/
+   percorreconta = *Headlista;
+
+   while(percorreconta!= NULL&&percorreconta->conta!=nconta)
+   {
+       contaAnterior= percorreconta;
+       percorreconta= percorreconta->proxConta;
+    }
+
+    if(percorreconta!=NULL)
+    {
+        lixo=percorreconta;
+        contaAnterior->proxConta=percorreconta->proxConta;
+        free(lixo);
+    }
+
+}
+
 void imprime(RegCCorrentePtr contaAtual){
     // verifica se a lista nao esta vazia
     if(contaAtual == NULL){
@@ -164,6 +204,8 @@ void imprime(RegCCorrentePtr contaAtual){
         return;
     }
 
+
+    printf("\n---------------------------------------------------------------");
     printf("\n---------------------- Dados Pessoais -------------------------");
     printf("\nNome              : %s", contaAtual->DadosPessoais.nome);
     printf("\nRG                : %s", contaAtual->DadosPessoais.rg);
@@ -187,49 +229,43 @@ void imprime(RegCCorrentePtr contaAtual){
     imprime(contaAtual->proxConta);
 }
 
+void addZero(char data[2]){
+    data[1] = data[0];
+    data[0] = '0';
+}
+
 void formataData(char data[10], char dataAbertura[10]){
     for(int dt = 0; dt < 10; dt++)
         data[dt] = dataAbertura[dt];
 }
-void excluiCCorrente (RegCCorrentePtr *Headlista, int nconta)
-{
-   RegCCorrentePtr percorreconta;
-   RegCCorrentePtr contaAnterior;
-   RegCCorrentePtr lixo;
-   if(Headlista==NULL) //Caso da lista estar vazia
-   {
-       printf("Nao ha contas registradas");
-       exit(0);
 
-   }
+void dataAtual(char data[10], int dia, int mes, int ano){
+    char d[2], m[2], a[4];
 
+    itoa(dia, d, 10);
+    itoa(mes, m, 10);
+    itoa(ano, a, 10);
 
-   //Deleta primeira conta da lista
-  if (nconta == (*Headlista)->conta)
+    if(dia < 9)
+        addZero(d);
 
-   {
-       RegCCorrentePtr aux;
-       aux= *Headlista;
-       *Headlista=(*Headlista)->proxConta;
-       free(aux);
+    if(mes < 9)
+        addZero(m);
 
-   }
+    for(int dt = 0; dt < 10; dt++){
+        if(dt < 2)
+            data[dt] = d[dt];
 
+        else if(dt == 2)
+            data[dt] = '/';
 
+        else if(dt > 2 && dt < 5)
+            data[dt] = m[dt - 3];
+        
+        else if(dt == 5)
+            data[dt] = '/';
 
-   percorreconta = *Headlista;                /* Deleta a conta caso
-                                               ela nao esteja no
-                                               comeco da lista*/
-   while(percorreconta!= NULL&&percorreconta->conta!=nconta)
-   {
-       contaAnterior= percorreconta;
-       percorreconta= percorreconta->proxConta;
-                                                }
-   if(percorreconta!=NULL)
-   {
-       lixo=percorreconta;
-       contaAnterior->proxConta=percorreconta->proxConta;
-       free(lixo);
-   }
-
+        else
+            data[dt] = a[dt - 6];
+    }
 }
