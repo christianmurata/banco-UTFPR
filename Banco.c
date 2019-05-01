@@ -86,6 +86,7 @@ int main(void)
             
             // imprimir conta
             case 3:
+                cabecalho();
                 imprime(contas);
                 aguardaTecla();
                 break;
