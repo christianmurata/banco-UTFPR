@@ -35,12 +35,12 @@ void formataData(char[10], char[10]);
 void dataAtual(char[10], int, int, int);
 
 void imprime(RegCCorrentePtr);
+int contaLivre(RegCCorrentePtr, int);
 
 void insereConta(RegCCorrentePtr *, int, char[10], double);
 void insereContaMeio(RegCCorrentePtr *, int, char[10], double);
 void insereDadosPessoais(RegCCorrentePtr *);
 void excluiCCorrente (RegCCorrentePtr* , int);
-
 
 int main(void)
 {
@@ -57,16 +57,28 @@ int main(void)
     RegCCorrentePtr contas = NULL;
 
     // insere algumas contas, de exemplo
-    insereConta(&contas, 14, data, 0);
-    insereConta(&contas, 3, data, 0);
-    insereConta(&contas, 1, data, 0);
+    insereConta(&contas, contaLivre(contas, 1), data, 0);
+    insereConta(&contas, contaLivre(contas, 1), data, 0);
+    insereConta(&contas, contaLivre(contas, 1), data, 0);
 
     // teste de exclusão
     imprime(contas);
-    excluiCCorrente(&contas,1);
-    imprime(contas);
+    // excluiCCorrente(&contas,1);
+    // imprime(contas);
 
     return 0;
+}
+
+int contaLivre(RegCCorrentePtr novaConta, int numero)
+{
+    // primeira conta
+    if(novaConta == NULL)
+        return 1;
+
+    if(novaConta->conta != numero)
+        return 1;
+
+    return contaLivre(novaConta->proxConta, numero + 1) + 1;
 }
 
 void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10], double depositoInicial)
