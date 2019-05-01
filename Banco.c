@@ -9,7 +9,7 @@ int conta;
 char tipoMov;
 char tipoConta;
 char DataMov[10];
-char Dataabertura[9];
+char Dataabertura[10];
 
 double valorMov;
 double saldoAtual;
