@@ -30,6 +30,11 @@ struct regCCorrente *proxConta;
 typedef struct regCCorrente RegCCorrente;
 typedef RegCCorrente *RegCCorrentePtr;
 
+void menu();
+void clear();
+void cabecalho();
+void aguardaTecla();
+
 void addZero(char[2]);
 void formataData(char[10], char[10]);
 void dataAtual(char[10], int, int, int);
@@ -44,6 +49,7 @@ void excluiCCorrente (RegCCorrentePtr* , int);
 
 int main(void)
 {
+    int opt;
     char data[10];
 
     // get data atual
@@ -56,15 +62,40 @@ int main(void)
     // inicializa a lista encadeada
     RegCCorrentePtr contas = NULL;
 
-    // insere algumas contas, de exemplo
-    insereConta(&contas, contaLivre(contas, 1), data, 0);
-    insereConta(&contas, contaLivre(contas, 1), data, 0);
-    insereConta(&contas, contaLivre(contas, 1), data, 0);
+    do{
+        // imprime o menu de selecao
+        menu();
 
-    // teste de exclusão
-    imprime(contas);
-    // excluiCCorrente(&contas,1);
-    // imprime(contas);
+        printf("\nDigite sua opcao: ");
+        scanf("%d", &opt);
+
+        fflush(stdin);
+
+        switch (opt)
+        {
+            // cadastrar
+            case 1:
+                cabecalho();
+                insereConta(&contas, contaLivre(contas, 1), data, 0);
+                break;
+            
+            // excluir
+            case 2:
+                excluiCCorrente(&contas, 1);
+                break;
+            
+            // imprimir conta
+            case 3:
+                imprime(contas);
+                aguardaTecla();
+                break;
+            
+            default:
+                printf("Opcao invalida");
+                break;
+        }
+
+    } while(opt != -1);
 
     return 0;
 }
@@ -240,6 +271,53 @@ void imprime(RegCCorrentePtr contaAtual){
 
     // se houver, imprime
     imprime(contaAtual->proxConta);
+}
+
+void cabecalho(){
+    clear();
+
+    printf("---------------------------------------------------------------\n");
+    printf("        ,-----. ,----.    ,--.                   ,--.          \n");
+    printf("       '  .--./'  .-./    |  |-.  ,--,--.,--,--, |  |,-.       \n");
+    printf("       |  |    |  | .---. | .-. '' ,-.  ||      \\|     /      \n");
+    printf("       '  '--'\\'  '--'  | | `-' |\\ '-'  ||  ||  ||  \\  \\   \n");
+    printf("        `-----' `------'   `---'  `--`--'`--''--'`--'`--'      \n");
+    printf("---------------------------------------------------------------\n");
+    printf("---------------------------------------------------------------\n");
+}
+
+void menu(){
+    clear();
+    cabecalho();
+
+    printf("\n---------------------------------------------------------------");
+    printf("\n----------------------- Bem Vindo! ----------------------------");
+    printf("\n|                1 - cadastrar conta                          |");
+    printf("\n|                2 - Alterar dados da conta                   |");
+    printf("\n|                3 - Consultar dados da conta                 |");
+    printf("\n|                4 - Deposito                                 |");
+    printf("\n|                5 - Saque                                    |");
+    printf("\n|                6 - consultar saldo                          |");
+    printf("\n|                7 - Trasferencia entre contas                |");
+    printf("\n|                8 - Dados da ultima movimentacao             |");
+    printf("\n|                                                             |");
+    printf("\n|             (-1) - sair                                     |");
+    printf("\n---------------------------------------------------------------");
+}
+
+void clear(){
+    #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+        system("clear");
+    #endif
+
+    #if defined(_WIN32) || defined(_WIN64)
+        system("cls");
+    #endif
+}
+
+void aguardaTecla(){
+    getchar();
+    fflush(stdin);
 }
 
 void addZero(char data[2]){
