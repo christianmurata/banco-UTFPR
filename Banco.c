@@ -73,44 +73,52 @@ int main(void)
 
         switch (opt)
         {
+						// sair
+						case -1:
+								cabecalho();
+								printf("\n------ Obrigado por utilizar nosso sistema! -------");
+								printf("\n       <Pressione qualquer tecla para Sair>        ");
+								break;
+
             // cadastrar
             case 1:
                 cabecalho();
                 insereConta(&contas, contaLivre(contas, 1), data, 0);
                 break;
-            
+
             // excluir
             case 2:
                 excluiCCorrente(&contas, 1);
                 break;
-            
+
             // imprimir conta
             case 3:
                 cabecalho();
                 imprime(contas);
-                aguardaTecla();
                 break;
-            
+
             default:
                 printf("Opcao invalida");
                 break;
         }
+
+				aguardaTecla();
 
     } while(opt != -1);
 
     return 0;
 }
 
-int contaLivre(RegCCorrentePtr novaConta, int numero)
+int contaLivre(RegCCorrentePtr conta, int numero)
 {
     // primeira conta
-    if(novaConta == NULL)
+    if(conta == NULL)
         return 1;
 
-    if(novaConta->conta != numero)
+    if(conta->conta != numero)
         return 1;
 
-    return contaLivre(novaConta->proxConta, numero + 1) + 1;
+    return contaLivre(conta->proxConta, numero + 1) + 1;
 }
 
 void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10], double depositoInicial)
@@ -125,7 +133,7 @@ void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10]
 
     //Verifica se existe memoria disponivel
     if(novaConta!=NULL){
-        
+
         // leitura dos dados pessoais
         insereDadosPessoais(&novaConta);
 
@@ -134,7 +142,7 @@ void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10]
         novaConta->saldoAtual       = depositoInicial;
         novaConta->depositoInicial  = depositoInicial;
 
-        // formataData(novaConta->Dataabertura, dataAbertura);	
+        // formataData(novaConta->Dataabertura, dataAbertura);
         sprintf(novaConta->Dataabertura, "%s", dataAbertura);
 
         Contaatual = *novaContaPtr;
@@ -198,6 +206,8 @@ void insereDadosPessoais(RegCCorrentePtr *dadosPessoa)
     gets((*dadosPessoa)->DadosPessoais.senha);
 
     fflush(stdin);
+
+		printf("\nPressione <ENTER> para confirmar");
 }
 
 void excluiCCorrente (RegCCorrentePtr *Headlista, int nconta)
@@ -353,7 +363,7 @@ void dataAtual(char data[10], int dia, int mes, int ano){
 
         else if(dt > 2 && dt < 5)
             data[dt] = m[dt - 3];
-        
+
         else if(dt == 5)
             data[dt] = '/';
 
