@@ -40,7 +40,7 @@ void formataData(char[10], char[10]);
 void dataAtual(char[10], int, int, int);
 
 void imprime(RegCCorrentePtr);
-int contaLivre(RegCCorrentePtr, int);
+int contaLivre(RegCCorrentePtr);
 
 void insereConta(RegCCorrentePtr *, int, char[10], double);
 void insereContaMeio(RegCCorrentePtr *, int, char[10], double);
@@ -73,17 +73,17 @@ int main(void)
 
         switch (opt)
         {
-						// sair
-						case -1:
-								cabecalho();
-								printf("\n------ Obrigado por utilizar nosso sistema! -------");
-								printf("\n       <Pressione qualquer tecla para Sair>        ");
-								break;
+            // sair
+            case -1:
+                cabecalho();
+                printf("\n------ Obrigado por utilizar nosso sistema! -------");
+                printf("\n       <Pressione qualquer tecla para Sair>        ");
+                break;
 
             // cadastrar
             case 1:
                 cabecalho();
-                insereConta(&contas, contaLivre(contas, 1), data, 0);
+                insereConta(&contas, contaLivre(contas), data, 0);
                 break;
 
             // excluir
@@ -102,23 +102,50 @@ int main(void)
                 break;
         }
 
-				aguardaTecla();
+        aguardaTecla();
 
     } while(opt != -1);
 
     return 0;
 }
 
-int contaLivre(RegCCorrentePtr conta, int numero)
+int contaLivre(RegCCorrentePtr contaAtual)
 {
+    // a lista esta vazia
+    if(contaAtual == NULL)
+        return 1;
+
+    RegCCorrentePtr inicioLista = contaAtual; 
+    RegCCorrentePtr contaPtrAux = NULL;
+
     // primeira conta
-    if(conta == NULL)
-        return 1;
+    int numeroConta = 1;
 
-    if(conta->conta != numero)
-        return 1;
+    // verifica qual a proxima conta livre
+    for(numeroConta; numeroConta <= 999; numeroConta++){
+        // ponteiro auxiliar que sera percorrido
+        contaPtrAux = inicioLista;
 
-    return contaLivre(conta->proxConta, numero + 1) + 1;
+        // percorre a lista ate o final
+        while (contaPtrAux->proxConta == NULL){
+            // numero da conta nao disponivel
+            if(contaPtrAux->conta == numeroConta){ 
+                numeroConta++; 
+                
+                continue; 
+            }
+
+            // conta disponivel
+            if(contaPtrAux->conta != numeroConta){
+                return numeroConta;
+            }
+        }
+    }
+
+    // se não houver mais numero de contas
+    // para ser cadastrada
+    return -1;
+
 }
 
 void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10], double depositoInicial)
@@ -207,7 +234,7 @@ void insereDadosPessoais(RegCCorrentePtr *dadosPessoa)
 
     fflush(stdin);
 
-		printf("\nPressione <ENTER> para confirmar");
+    printf("\nPressione <ENTER> para confirmar");
 }
 
 void excluiCCorrente (RegCCorrentePtr *Headlista, int nconta)
