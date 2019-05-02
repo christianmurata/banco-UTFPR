@@ -121,7 +121,7 @@ int contaLivre(RegCCorrentePtr conta, int numero)
     return contaLivre(conta->proxConta, numero + 1) + 1;
 }
 
-void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10], double depositoInicial)
+void insereConta(RegCCorrentePtr *Ptrinicial, int conta, char dataAbertura[10], double depositoInicial)
 {
     RegCCorrentePtr novaConta;//Nova conta a ser criada
 
@@ -145,7 +145,7 @@ void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10]
         // formataData(novaConta->Dataabertura, dataAbertura);
         sprintf(novaConta->Dataabertura, "%s", dataAbertura);
 
-        Contaatual = *novaContaPtr;
+        Contaatual = *Ptrinicial;
 
         novaConta->proxConta = NULL;
         Contaanterior        = NULL;
@@ -160,10 +160,10 @@ void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10]
 
         if(Contaanterior == NULL){
 
-            novaConta->proxConta = *novaContaPtr;
+            novaConta->proxConta = *Ptrinicial;
 
 
-            *novaContaPtr = novaConta;
+            *Ptrinicial = novaConta;
         }
 
         else
