@@ -36,13 +36,13 @@ typedef struct regCCorrente RegCCorrente;
 typedef RegCCorrente *RegCCorrentePtr;
 
 /*
-*Prototipo da função do menu do funcionario
+*Prototipo da funï¿½ï¿½o do menu do funcionario
 */
 
 void menu();
 
 /*
-*Prototipo da função que realiza a limpeza de tela
+*Prototipo da funï¿½ï¿½o que realiza a limpeza de tela
 */
 
 void clear();
@@ -58,7 +58,7 @@ void dataAtual(char[10], int, int, int);
 void imprime(RegCCorrentePtr);
 
 /*
-* Prototipo da função que retorna o numero da proxima
+* Prototipo da funï¿½ï¿½o que retorna o numero da proxima
 * conta livre disponivel
 */
 
@@ -73,14 +73,14 @@ void insereDadosPessoais(RegCCorrentePtr *);
 void excluiCCorrente (RegCCorrentePtr* , int);
 
 /*
-* Prototipo da função do que reliza o deposito de uma conta
+* Prototipo da funï¿½ï¿½o do que reliza o deposito de uma conta
 * bancaria se tendo o numero desta conta
 */
 
 void depositoCCorrente(int ,RegCCorrentePtr*, double);
 
 /*
-* Prototipo da função do que reliza o saque de uma conta
+* Prototipo da funï¿½ï¿½o do que reliza o saque de uma conta
 * bancaria se tendo o numero desta conta
 */
 
@@ -95,8 +95,8 @@ void transfereValor(int, int, double,RegCCorrentePtr);
 
 
 /*
-* Função main do sistema, dentro dessa função
-* serão chamadas as funções correspondentes
+* Funï¿½ï¿½o main do sistema, dentro dessa funï¿½ï¿½o
+* serï¿½o chamadas as funï¿½ï¿½es correspondentes
 * as funcionalidades selecionadas
 */
 int main(void)
@@ -125,12 +125,12 @@ int main(void)
 
         switch (opt)
         {
-						// sair
-						case -1:
-								cabecalho();
-								printf("\n------ Obrigado por utilizar nosso sistema! -------");
-								printf("\n       <Pressione qualquer tecla para Sair>        ");
-								break;
+            // sair
+            case -1:
+                cabecalho();
+                printf("\n------ Obrigado por utilizar nosso sistema! -------");
+                printf("\n       <Pressione qualquer tecla para Sair>        ");
+                break;
 
             // cadastrar
             case 1:
@@ -163,7 +163,7 @@ int main(void)
                 break;
         }
 
-				aguardaTecla();
+        aguardaTecla();
 
     } while(opt != -1);
 
@@ -172,7 +172,7 @@ int main(void)
 
 
 /*
-* A função procura o proximo numero de conta disponivel
+* A funï¿½ï¿½o procura o proximo numero de conta disponivel
 */
 int contaLivre(RegCCorrentePtr PrimeiroPtr, int numero)
 {
@@ -236,7 +236,7 @@ void insereConta(RegCCorrentePtr *Ptrinicial, char dataAbertura[10])
         }
     }
 
-    else//caso não houver memoria
+    else//caso nï¿½o houver memoria
     {
         printf("Sem memoria pra alocar");
     }
@@ -337,7 +337,7 @@ void imprime(RegCCorrentePtr contaAtual){
     printf("\nDeposito Inicial: %.2f", contaAtual->depositoInicial);
 
     // verifica se existe mais elementos na lista
-    // se não houver, para a recursão
+    // se nï¿½o houver, para a recursï¿½o
     if(contaAtual->proxConta == NULL)
         return;
 
@@ -418,7 +418,7 @@ void saqueCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double saque)
         RegCCorrentePtr Contadestino= obtemCCorrente(nconta,*Ptrinicial);
 
         Contadestino->saldoAtual=Contadestino->saldoAtual-saque;
-        //if(Contadestino->depositoInicial=='C'&&Contadestino->depositoInicial<0) O saque pra conta espcial e comum funciona diferente, não implementei ainda
+        //if(Contadestino->depositoInicial=='C'&&Contadestino->depositoInicial<0) O saque pra conta espcial e comum funciona diferente, nï¿½o implementei ainda
         //{printf()}
 
 
