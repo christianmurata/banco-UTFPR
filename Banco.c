@@ -21,7 +21,7 @@ double valorMov;
 double saldoAtual;
 double depositoInicial;
 char nome[40];
-char senha[6];
+char senha[7];
 char cpf[12];
 char rg [10];
 char nascimento[10];
@@ -36,13 +36,13 @@ typedef struct regCCorrente RegCCorrente;
 typedef RegCCorrente *RegCCorrentePtr;
 
 /*
-*Prototipo da função do menu do funcionario
+*Prototipo da funcao do menu do funcionario
 */
 
 void menu();
 
 /*
-*Prototipo da função que realiza a limpeza de tela
+*Prototipo da funcao que realiza a limpeza de tela
 */
 
 void clear();
@@ -58,7 +58,7 @@ void dataAtual(char[10], int, int, int);
 void imprime(RegCCorrentePtr);
 
 /*
-* Prototipo da função que retorna o numero da proxima
+* Prototipo da funcao que retorna o numero da proxima
 * conta livre disponivel
 */
 
@@ -73,18 +73,18 @@ void insereDadosPessoais(RegCCorrentePtr *);
 void excluiCCorrente (RegCCorrentePtr* , int);
 
 /*
-* Prototipo da função do que reliza o deposito de uma conta
+* Prototipo da funcao do que reliza o deposito de uma conta
 * bancaria se tendo o numero desta conta
 */
 
 void depositoCCorrente(int ,RegCCorrentePtr*, double);
 
 /*
-* Prototipo da função do que reliza o saque de uma conta
+* Prototipo da funcao do que reliza o saque de uma conta
 * bancaria se tendo o numero desta conta
 */
 
-void saqueCCorrente(int ,RegCCorrentePtr*, double);
+int saqueCCorrente(int ,RegCCorrentePtr*, double);
 
 
 RegCCorrente * obtemCCorrente(int, RegCCorrentePtr);
@@ -95,8 +95,8 @@ void transfereValor(int, int, double,RegCCorrentePtr);
 
 
 /*
-* Função main do sistema, dentro dessa função
-* serão chamadas as funções correspondentes
+* Funï¿½ï¿½o main do sistema, dentro dessa funï¿½ï¿½o
+* serï¿½o chamadas as funï¿½ï¿½es correspondentes
 * as funcionalidades selecionadas
 */
 int main(void)
@@ -106,10 +106,12 @@ int main(void)
 
     // get data atual
     time_t date = time(NULL);
+
     struct tm tm = *localtime(&date);
 
     // data (int) to data (char)
     dataAtual(data, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+
 
     // inicializa a lista encadeada
     RegCCorrentePtr contas = NULL;
@@ -153,6 +155,11 @@ int main(void)
                 depositoCCorrente(1,&contas,1000);
                 break;
 
+            case 5:
+                cabecalho();
+                saqueCCorrente(1,&contas,1000);
+                break;
+
             case 7:
                 cabecalho();
                 transfereValor(2,3,500,contas);
@@ -172,7 +179,7 @@ int main(void)
 
 
 /*
-* A função procura o proximo numero de conta disponivel
+* A funï¿½ï¿½o procura o proximo numero de conta disponivel
 */
 int contaLivre(RegCCorrentePtr PrimeiroPtr, int numero)
 {
@@ -236,7 +243,7 @@ void insereConta(RegCCorrentePtr *Ptrinicial, char dataAbertura[10])
         }
     }
 
-    else//caso não houver memoria
+    else//caso nï¿½o houver memoria
     {
         printf("Sem memoria pra alocar");
     }
@@ -335,9 +342,10 @@ void imprime(RegCCorrentePtr contaAtual){
     printf("\nData Abertura   : %s",   contaAtual->Dataabertura);
     printf("\nSaldo atual     : %.2f", contaAtual->saldoAtual);
     printf("\nDeposito Inicial: %.2f", contaAtual->depositoInicial);
+    printf("\nTipo da conta   : %c", contaAtual->tipoConta);
 
     // verifica se existe mais elementos na lista
-    // se não houver, para a recursão
+    // se nï¿½o houver, para a recursï¿½o
     if(contaAtual->proxConta == NULL)
         return;
 
@@ -413,13 +421,20 @@ void depositoCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double deposito )
 }
 
 
-void saqueCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double saque)
+int saqueCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double saque)
 {
         RegCCorrentePtr Contadestino= obtemCCorrente(nconta,*Ptrinicial);
 
-        Contadestino->saldoAtual=Contadestino->saldoAtual-saque;
-        //if(Contadestino->depositoInicial=='C'&&Contadestino->depositoInicial<0) O saque pra conta espcial e comum funciona diferente, não implementei ainda
-        //{printf()}
+
+        if(Contadestino->tipoConta=='C'&&Contadestino->saldoAtual-saque<0)
+        {return 0;}
+        else if(Contadestino->tipoConta=='E'&&Contadestino->saldoAtual-saque<-1000)
+        {return 0;}
+        else
+        {
+            Contadestino->saldoAtual=Contadestino->saldoAtual-saque;
+            return 1;
+        }
 
 
 
@@ -428,7 +443,7 @@ void saqueCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double saque)
 
 
 void dataAtual(char data[10], int dia, int mes, int ano){
-    char d[2], m[2], a[4];
+    char d[3], m[3], a[5];
 
     itoa(dia, d, 10);
     itoa(mes, m, 10);
@@ -492,7 +507,7 @@ RegCCorrente* leCCorrente (void)
 
     NovaConta->saldoAtual=NovaConta->depositoInicial;
 
-    if(NovaConta->depositoInicial>10000)
+    if(NovaConta->depositoInicial>=10000)
     NovaConta->tipoConta='E';
 
     else
