@@ -3,7 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct regCCorrente{ /* Struct principal com os dados da conta*/
+
+/*
+* Estrutura que corresponde ao registro de
+* uma conta bancaria
+*/
+
+struct regCCorrente{
 
 int conta;
 char tipoMov;
@@ -14,39 +20,85 @@ char Dataabertura[10];
 double valorMov;
 double saldoAtual;
 double depositoInicial;
+char nome[40];
+char senha[6];
+char cpf[12];
+char rg [10];
+char nascimento[10];
 
-struct dadosPessoais { /*Sub-Struct que contem os dados pessoais da conta*/
-    char nome[40];
-    char senha[6];
-    char cpf[12];
-    char rg [10];
-    char nascimento[10];
-} DadosPessoais;
 
 struct regCCorrente *proxConta;
 
 };
 
 typedef struct regCCorrente RegCCorrente;
+
 typedef RegCCorrente *RegCCorrentePtr;
 
+/*
+*Prototipo da função do menu do funcionario
+*/
+
 void menu();
+
+/*
+*Prototipo da função que realiza a limpeza de tela
+*/
+
 void clear();
+
 void cabecalho();
+
 void aguardaTecla();
 
 void addZero(char[2]);
-void formataData(char[10], char[10]);
+
 void dataAtual(char[10], int, int, int);
 
 void imprime(RegCCorrentePtr);
+
+/*
+* Prototipo da função que retorna o numero da proxima
+* conta livre disponivel
+*/
+
 int contaLivre(RegCCorrentePtr, int);
 
-void insereConta(RegCCorrentePtr *, int, char[10], double);
+void insereConta(RegCCorrentePtr *, char[10]);
+
 void insereContaMeio(RegCCorrentePtr *, int, char[10], double);
+
 void insereDadosPessoais(RegCCorrentePtr *);
+
 void excluiCCorrente (RegCCorrentePtr* , int);
 
+/*
+* Prototipo da função do que reliza o deposito de uma conta
+* bancaria se tendo o numero desta conta
+*/
+
+void depositoCCorrente(int ,RegCCorrentePtr*, double);
+
+/*
+* Prototipo da função do que reliza o saque de uma conta
+* bancaria se tendo o numero desta conta
+*/
+
+void saqueCCorrente(int ,RegCCorrentePtr*, double);
+
+
+RegCCorrente * obtemCCorrente(int, RegCCorrentePtr);
+
+RegCCorrente* leCCorrente (void);
+
+void transfereValor(int, int, double,RegCCorrentePtr);
+
+
+/*
+* Função main do sistema, dentro dessa função
+* serão chamadas as funções correspondentes
+* as funcionalidades selecionadas
+*/
 int main(void)
 {
     int opt;
@@ -83,18 +135,27 @@ int main(void)
             // cadastrar
             case 1:
                 cabecalho();
-                insereConta(&contas, contaLivre(contas, 1), data, 0);
+                insereConta(&contas, data);
                 break;
 
             // excluir
             case 2:
-                excluiCCorrente(&contas, 1);
+                excluiCCorrente(&contas, 2);
                 break;
 
             // imprimir conta
             case 3:
                 cabecalho();
                 imprime(contas);
+                break;
+            case 4:
+                cabecalho();
+                depositoCCorrente(1,&contas,1000);
+                break;
+
+            case 7:
+                cabecalho();
+                transfereValor(2,3,500,contas);
                 break;
 
             default:
@@ -109,19 +170,23 @@ int main(void)
     return 0;
 }
 
-int contaLivre(RegCCorrentePtr conta, int numero)
+
+/*
+* A função procura o proximo numero de conta disponivel
+*/
+int contaLivre(RegCCorrentePtr PrimeiroPtr, int numero)
 {
     // primeira conta
-    if(conta == NULL)
+    if(PrimeiroPtr == NULL)
         return 1;
 
-    if(conta->conta != numero)
+    if(PrimeiroPtr->conta != numero)
         return 1;
 
-    return contaLivre(conta->proxConta, numero + 1) + 1;
+    return contaLivre(PrimeiroPtr->proxConta, numero + 1) + 1;
 }
 
-void insereConta(RegCCorrentePtr *Ptrinicial, int conta, char dataAbertura[10], double depositoInicial)
+void insereConta(RegCCorrentePtr *Ptrinicial, char dataAbertura[10])
 {
     RegCCorrentePtr novaConta;//Nova conta a ser criada
 
@@ -129,18 +194,16 @@ void insereConta(RegCCorrentePtr *Ptrinicial, int conta, char dataAbertura[10], 
 
     RegCCorrentePtr Contaanterior;
 
-    novaConta = malloc(sizeof(RegCCorrente)); //Aloca memoria para a proxima conta
+    novaConta = leCCorrente(); //Aloca memoria para a proxima conta
 
     //Verifica se existe memoria disponivel
     if(novaConta!=NULL){
 
         // leitura dos dados pessoais
-        insereDadosPessoais(&novaConta);
+
 
         // cria a nova conta
-        novaConta->conta            = conta;
-        novaConta->saldoAtual       = depositoInicial;
-        novaConta->depositoInicial  = depositoInicial;
+        novaConta->conta            = contaLivre(*Ptrinicial,1);
 
         // formataData(novaConta->Dataabertura, dataAbertura);
         sprintf(novaConta->Dataabertura, "%s", dataAbertura);
@@ -152,7 +215,7 @@ void insereConta(RegCCorrentePtr *Ptrinicial, int conta, char dataAbertura[10], 
 
         // Encontra o lugar da conta baseado em sem numero
         // Ordena em ordem crescente por numero da conta
-        while(Contaatual!=NULL&&conta > Contaatual->conta)
+        while(Contaatual!=NULL&&novaConta->conta > Contaatual->conta)
         {
             Contaanterior=Contaatual;
             Contaatual=Contaatual->proxConta;
@@ -173,14 +236,14 @@ void insereConta(RegCCorrentePtr *Ptrinicial, int conta, char dataAbertura[10], 
         }
     }
 
-    else//caso nÃ£o houver memoria
+    else//caso não houver memoria
     {
         printf("Sem memoria pra alocar");
     }
 
 }
 
-void insereDadosPessoais(RegCCorrentePtr *dadosPessoa)
+/*void insereDadosPessoais(RegCCorrentePtr *dadosPessoa)
 {
     printf("\nNome: ");
     gets((*dadosPessoa)->DadosPessoais.nome);
@@ -208,44 +271,42 @@ void insereDadosPessoais(RegCCorrentePtr *dadosPessoa)
     fflush(stdin);
 
 		printf("\nPressione <ENTER> para confirmar");
-}
+}*/
 
-void excluiCCorrente (RegCCorrentePtr *Headlista, int nconta)
+void excluiCCorrente (RegCCorrentePtr *PrimeiroPtr, int nconta)
 {
-   RegCCorrentePtr percorreconta;
-   RegCCorrentePtr contaAnterior;
+
+   RegCCorrentePtr Contadestino;
+   RegCCorrentePtr Contaanterior;
    RegCCorrentePtr lixo;
-   if(Headlista==NULL) //Caso da lista estar vazia
+
+   if(PrimeiroPtr==NULL) //Caso da lista estar vazia
    {
        printf("Nao ha contas registradas");
-       exit(0);
+       return ;
 
    }
 
    //Deleta primeira conta da lista
-  if (nconta == (*Headlista)->conta)
+  if (nconta == (*PrimeiroPtr)->conta)
 
    {
        RegCCorrentePtr aux;
-       aux= *Headlista;
-       *Headlista=(*Headlista)->proxConta;
+       aux= *PrimeiroPtr;
+       *PrimeiroPtr=(*PrimeiroPtr)->proxConta;
        free(aux);
 
    }
-
+   ;
     /* Deleta a conta caso ela nao esteja no comeco da lista*/
-   percorreconta = *Headlista;
+   Contadestino  = obtemCCorrente(nconta,*PrimeiroPtr);
+   Contaanterior = obtemCCorrente(nconta-1,*PrimeiroPtr);
 
-   while(percorreconta!= NULL&&percorreconta->conta!=nconta)
-   {
-       contaAnterior= percorreconta;
-       percorreconta= percorreconta->proxConta;
-    }
 
-    if(percorreconta!=NULL)
+    if(Contadestino !=NULL)
     {
-        lixo=percorreconta;
-        contaAnterior->proxConta=percorreconta->proxConta;
+        lixo=Contadestino ;
+        Contaanterior->proxConta=Contadestino ->proxConta;
         free(lixo);
     }
 
@@ -262,10 +323,10 @@ void imprime(RegCCorrentePtr contaAtual){
 
     printf("\n---------------------------------------------------------------");
     printf("\n---------------------- Dados Pessoais -------------------------");
-    printf("\nNome              : %s", contaAtual->DadosPessoais.nome);
-    printf("\nRG                : %s", contaAtual->DadosPessoais.rg);
-    printf("\nCPF               : %s", contaAtual->DadosPessoais.cpf);
-    printf("\nData de Nascimento: %s", contaAtual->DadosPessoais.nascimento);
+    printf("\nNome              : %s", contaAtual->nome);
+    printf("\nRG                : %s", contaAtual->rg);
+    printf("\nCPF               : %s", contaAtual->cpf);
+    printf("\nData de Nascimento: %s", contaAtual->nascimento);
 
 
     // imprime os dados da conta
@@ -276,7 +337,7 @@ void imprime(RegCCorrentePtr contaAtual){
     printf("\nDeposito Inicial: %.2f", contaAtual->depositoInicial);
 
     // verifica se existe mais elementos na lista
-    // se nÃ£o houver, para a recursÃ£o
+    // se não houver, para a recursão
     if(contaAtual->proxConta == NULL)
         return;
 
@@ -304,7 +365,7 @@ void menu(){
     printf("\n---------------------------------------------------------------");
     printf("\n----------------------- Bem Vindo! ----------------------------");
     printf("\n|                1 - cadastrar conta                          |");
-    printf("\n|                2 - Alterar dados da conta                   |");
+    printf("\n|                2 - Excluir conta corrente                   |");
     printf("\n|                3 - Consultar dados da conta                 |");
     printf("\n|                4 - Deposito                                 |");
     printf("\n|                5 - Saque                                    |");
@@ -336,10 +397,35 @@ void addZero(char data[2]){
     data[0] = '0';
 }
 
-void formataData(char data[10], char dataAbertura[10]){
-    for(int dt = 0; dt < 10; dt++)
-        data[dt] = dataAbertura[dt];
+void depositoCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double deposito )
+{
+    RegCCorrentePtr Contadestino=obtemCCorrente(nconta,*Ptrinicial);
+
+
+
+
+
+
+        Contadestino->saldoAtual=Contadestino->saldoAtual+deposito;
+
+
+
 }
+
+
+void saqueCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double saque)
+{
+        RegCCorrentePtr Contadestino= obtemCCorrente(nconta,*Ptrinicial);
+
+        Contadestino->saldoAtual=Contadestino->saldoAtual-saque;
+        //if(Contadestino->depositoInicial=='C'&&Contadestino->depositoInicial<0) O saque pra conta espcial e comum funciona diferente, não implementei ainda
+        //{printf()}
+
+
+
+}
+
+
 
 void dataAtual(char data[10], int dia, int mes, int ano){
     char d[2], m[2], a[4];
@@ -370,4 +456,86 @@ void dataAtual(char data[10], int dia, int mes, int ano){
         else
             data[dt] = a[dt - 6];
     }
+}
+
+
+
+RegCCorrente * obtemCCorrente(int nconta, RegCCorrentePtr Primeiroptr)
+{
+    RegCCorrentePtr percorrelista;
+
+    RegCCorrentePtr anterior;
+
+    percorrelista=Primeiroptr;
+
+    while(percorrelista!=NULL && percorrelista->conta!=nconta)
+    {
+        anterior=percorrelista;
+        percorrelista=percorrelista->proxConta;
+    }
+    return percorrelista;
+
+
+}
+
+RegCCorrente* leCCorrente (void)
+{
+    RegCCorrentePtr NovaConta= malloc(sizeof(RegCCorrente));
+    NovaConta->proxConta=NULL;
+    //NovaConta->conta=contaLivre(1,Headlist) sem idea se o numero da conta deve ser obtido aqui
+
+    printf("Digite o saldo inicial da conta:\n");
+
+    scanf("%lf",&NovaConta->depositoInicial);
+
+    fflush(stdin);
+
+    NovaConta->saldoAtual=NovaConta->depositoInicial;
+
+    if(NovaConta->depositoInicial>10000)
+    NovaConta->tipoConta='E';
+
+    else
+    NovaConta->tipoConta='C';
+
+    printf("\nNome: ");
+    gets(NovaConta->nome);
+
+    fflush(stdin);
+
+    printf("\nRg: ");
+    gets(NovaConta->rg);
+
+    fflush(stdin);
+
+    printf("\nCPF: ");
+    gets(NovaConta->cpf);
+
+    fflush(stdin);
+
+    printf("\nData de Nascimento: ");
+    gets(NovaConta->nascimento);
+
+    fflush(stdin);
+
+    printf("\nEscolha uma senha: ");
+    gets(NovaConta->senha);
+
+    fflush(stdin);
+
+		printf("\nPressione <ENTER> para confirmar");
+
+
+    return NovaConta;
+}
+void transfereValor(int norigem, int ndestino, double valor,RegCCorrentePtr PrimeiroPtr)
+{
+    //RegCCorrentePtr ContaOrigim=obtemCCorrente(norigem,PrimeiroPtr);
+
+    //RegCCorrentePtr ContaDestino=obtemCCorrente(ndestino,PrimeiroPtr);
+
+    saqueCCorrente(norigem,&PrimeiroPtr,valor);
+    depositoCCorrente(ndestino,&PrimeiroPtr,valor);
+
+
 }
