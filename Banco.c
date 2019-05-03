@@ -53,7 +53,7 @@ void aguardaTecla();
 
 void addZero(char[2]);
 
-void dataAtual(char[10], int, int, int);
+void dataAtual(char[10]);
 
 void imprime(RegCCorrentePtr);
 
@@ -64,7 +64,7 @@ void imprime(RegCCorrentePtr);
 
 int contaLivre(RegCCorrentePtr, int);
 
-void insereConta(RegCCorrentePtr *, char[10]);
+void insereConta(RegCCorrentePtr *);
 
 void insereContaMeio(RegCCorrentePtr *, int, char[10], double);
 
@@ -104,13 +104,12 @@ int main(void)
     int opt;
     char data[10];
 
-    // get data atual
-    time_t date = time(NULL);
-
-    struct tm tm = *localtime(&date);
-
     // data (int) to data (char)
-    dataAtual(data, tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+    // dataAtual(data);
+
+    // printf("%s",data);
+
+    // return 0;
 
 
     // inicializa a lista encadeada
@@ -127,17 +126,17 @@ int main(void)
 
         switch (opt)
         {
-						// sair
-						case -1:
-								cabecalho();
-								printf("\n------ Obrigado por utilizar nosso sistema! -------");
-								printf("\n       <Pressione qualquer tecla para Sair>        ");
-								break;
+            // sair
+            case -1:
+                cabecalho();
+                printf("\n------ Obrigado por utilizar nosso sistema! -------");
+                printf("\n       <Pressione qualquer tecla para Sair>        ");
+                break;
 
             // cadastrar
             case 1:
                 cabecalho();
-                insereConta(&contas, data);
+                insereConta(&contas);
                 break;
 
             // excluir
@@ -170,7 +169,7 @@ int main(void)
                 break;
         }
 
-				aguardaTecla();
+        aguardaTecla();
 
     } while(opt != -1);
 
@@ -193,7 +192,7 @@ int contaLivre(RegCCorrentePtr PrimeiroPtr, int numero)
     return contaLivre(PrimeiroPtr->proxConta, numero + 1) + 1;
 }
 
-void insereConta(RegCCorrentePtr *Ptrinicial, char dataAbertura[10])
+void insereConta(RegCCorrentePtr *Ptrinicial)
 {
     RegCCorrentePtr novaConta;//Nova conta a ser criada
 
@@ -212,8 +211,7 @@ void insereConta(RegCCorrentePtr *Ptrinicial, char dataAbertura[10])
         // cria a nova conta
         novaConta->conta            = contaLivre(*Ptrinicial,1);
 
-        // formataData(novaConta->Dataabertura, dataAbertura);
-        sprintf(novaConta->Dataabertura, "%s", dataAbertura);
+        dataAtual(novaConta->Dataabertura);
 
         Contaatual = *Ptrinicial;
 
@@ -288,10 +286,10 @@ void excluiCCorrente (RegCCorrentePtr *PrimeiroPtr, int nconta)
    RegCCorrentePtr lixo;
 
    if(PrimeiroPtr==NULL) //Caso da lista estar vazia
-   {
+   {    
        printf("Nao ha contas registradas");
        return ;
-
+       
    }
 
    //Deleta primeira conta da lista
@@ -304,7 +302,7 @@ void excluiCCorrente (RegCCorrentePtr *PrimeiroPtr, int nconta)
        free(aux);
 
    }
-   ;
+   
     /* Deleta a conta caso ela nao esteja no comeco da lista*/
    Contadestino  = obtemCCorrente(nconta,*PrimeiroPtr);
    Contaanterior = obtemCCorrente(nconta-1,*PrimeiroPtr);
@@ -442,35 +440,13 @@ int saqueCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double saque)
 
 
 
-void dataAtual(char data[10], int dia, int mes, int ano){
-    char d[3], m[3], a[5];
+void dataAtual(char data[10]){
+    // get data atual
+    time_t date = time(NULL);
+    struct tm tm = *localtime(&date);
 
-    itoa(dia, d, 10);
-    itoa(mes, m, 10);
-    itoa(ano, a, 10);
-
-    if(dia < 9)
-        addZero(d);
-
-    if(mes < 9)
-        addZero(m);
-
-    for(int dt = 0; dt < 10; dt++){
-        if(dt < 2)
-            data[dt] = d[dt];
-
-        else if(dt == 2)
-            data[dt] = '/';
-
-        else if(dt > 2 && dt < 5)
-            data[dt] = m[dt - 3];
-
-        else if(dt == 5)
-            data[dt] = '/';
-
-        else
-            data[dt] = a[dt - 6];
-    }
+    // armazena a data na variavel recebida
+    sprintf(data, "%d/%d/%d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 }
 
 
