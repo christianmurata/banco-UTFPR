@@ -115,37 +115,34 @@ int contaLivre(RegCCorrentePtr contaAtual)
     if(contaAtual == NULL)
         return 1;
 
-    RegCCorrentePtr inicioLista = contaAtual; 
-    RegCCorrentePtr contaPtrAux = NULL;
+    RegCCorrentePtr inicioLista = contaAtual;
+    RegCCorrentePtr contaPtrAux = contaAtual;
 
-    // primeira conta
+    // primeiro numero conta verificado
     int numeroConta = 1;
 
-    // verifica qual a proxima conta livre
-    for(numeroConta; numeroConta <= 999; numeroConta++){
-        // ponteiro auxiliar que sera percorrido
-        contaPtrAux = inicioLista;
-
-        // percorre a lista ate o final
-        while (contaPtrAux->proxConta == NULL){
-            // numero da conta nao disponivel
-            if(contaPtrAux->conta == numeroConta){ 
-                numeroConta++; 
-                
-                continue; 
-            }
-
-            // conta disponivel
-            if(contaPtrAux->conta != numeroConta){
-                return numeroConta;
-            }
+    do{
+        // nao eh possivel cadastrar mais nenhuma conta
+        // lista cheia
+        if(numeroConta > 999){
+            return -1;
         }
-    }
 
-    // se não houver mais numero de contas
-    // para ser cadastrada
-    return -1;
+        // numero da conta nao disponivel
+        // verifica o proximo numero de conta
+        if(contaPtrAux->conta == numeroConta){
+            numeroConta++;
+            contaPtrAux = inicioLista;
+            
+            continue;
+        }
 
+        // proxima conta na lista
+        contaPtrAux = contaPtrAux->proxConta;
+
+    } while (contaPtrAux != NULL);
+
+    return numeroConta;
 }
 
 void insereConta(RegCCorrentePtr *novaContaPtr, int conta, char dataAbertura[10], double depositoInicial)
