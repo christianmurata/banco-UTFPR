@@ -104,14 +104,6 @@ int main(void)
     int opt;
     char data[10];
 
-    // data (int) to data (char)
-    // dataAtual(data);
-
-    // printf("%s",data);
-
-    // return 0;
-
-
     // inicializa a lista encadeada
     RegCCorrentePtr contas = NULL;
 
@@ -248,36 +240,6 @@ void insereConta(RegCCorrentePtr *Ptrinicial)
 
 }
 
-/*void insereDadosPessoais(RegCCorrentePtr *dadosPessoa)
-{
-    printf("\nNome: ");
-    gets((*dadosPessoa)->DadosPessoais.nome);
-
-    fflush(stdin);
-
-    printf("\nRg: ");
-    gets((*dadosPessoa)->DadosPessoais.rg);
-
-    fflush(stdin);
-
-    printf("\nCPF: ");
-    gets((*dadosPessoa)->DadosPessoais.cpf);
-
-    fflush(stdin);
-
-    printf("\nData de Nascimento: ");
-    gets((*dadosPessoa)->DadosPessoais.nascimento);
-
-    fflush(stdin);
-
-    printf("\nEscolha uma senha: ");
-    gets((*dadosPessoa)->DadosPessoais.senha);
-
-    fflush(stdin);
-
-		printf("\nPressione <ENTER> para confirmar");
-}*/
-
 void excluiCCorrente (RegCCorrentePtr *PrimeiroPtr, int nconta)
 {
 
@@ -406,39 +368,29 @@ void addZero(char data[2]){
 void depositoCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double deposito )
 {
     RegCCorrentePtr Contadestino=obtemCCorrente(nconta,*Ptrinicial);
-
-
-
-
-
-
-        Contadestino->saldoAtual=Contadestino->saldoAtual+deposito;
-
-
-
+    
+    Contadestino->saldoAtual=Contadestino->saldoAtual+deposito;
 }
-
 
 int saqueCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double saque)
 {
-        RegCCorrentePtr Contadestino= obtemCCorrente(nconta,*Ptrinicial);
+    RegCCorrentePtr Contadestino= obtemCCorrente(nconta,*Ptrinicial);
 
 
-        if(Contadestino->tipoConta=='C'&&Contadestino->saldoAtual-saque<0)
-        {return 0;}
-        else if(Contadestino->tipoConta=='E'&&Contadestino->saldoAtual-saque<-1000)
-        {return 0;}
-        else
-        {
-            Contadestino->saldoAtual=Contadestino->saldoAtual-saque;
-            return 1;
-        }
+    if(Contadestino->tipoConta=='C'&&Contadestino->saldoAtual-saque<0){ 
+        return 0; 
+    }
 
+    else if(Contadestino->tipoConta=='E'&&Contadestino->saldoAtual-saque<-1000){
+        return 0;
+    }
 
+    else{
+        Contadestino->saldoAtual=Contadestino->saldoAtual-saque;
+        return 1;
+    }
 
 }
-
-
 
 void dataAtual(char data[10]){
     // get data atual
@@ -448,8 +400,6 @@ void dataAtual(char data[10]){
     // armazena a data na variavel recebida
     sprintf(data, "%d/%d/%d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 }
-
-
 
 RegCCorrente * obtemCCorrente(int nconta, RegCCorrentePtr Primeiroptr)
 {
@@ -464,8 +414,8 @@ RegCCorrente * obtemCCorrente(int nconta, RegCCorrentePtr Primeiroptr)
         anterior=percorrelista;
         percorrelista=percorrelista->proxConta;
     }
-    return percorrelista;
 
+    return percorrelista;
 
 }
 
@@ -473,6 +423,7 @@ RegCCorrente* leCCorrente (void)
 {
     RegCCorrentePtr NovaConta= malloc(sizeof(RegCCorrente));
     NovaConta->proxConta=NULL;
+
     //NovaConta->conta=contaLivre(1,Headlist) sem idea se o numero da conta deve ser obtido aqui
 
     printf("Digite o saldo inicial da conta:\n");
@@ -484,10 +435,10 @@ RegCCorrente* leCCorrente (void)
     NovaConta->saldoAtual=NovaConta->depositoInicial;
 
     if(NovaConta->depositoInicial>=10000)
-    NovaConta->tipoConta='E';
+        NovaConta->tipoConta='E';
 
     else
-    NovaConta->tipoConta='C';
+        NovaConta->tipoConta='C';
 
     printf("\nNome: ");
     gets(NovaConta->nome);
@@ -514,19 +465,14 @@ RegCCorrente* leCCorrente (void)
 
     fflush(stdin);
 
-		printf("\nPressione <ENTER> para confirmar");
+    printf("\nPressione <ENTER> para confirmar");
 
 
     return NovaConta;
 }
+
 void transfereValor(int norigem, int ndestino, double valor,RegCCorrentePtr PrimeiroPtr)
 {
-    //RegCCorrentePtr ContaOrigim=obtemCCorrente(norigem,PrimeiroPtr);
-
-    //RegCCorrentePtr ContaDestino=obtemCCorrente(ndestino,PrimeiroPtr);
-
     saqueCCorrente(norigem,&PrimeiroPtr,valor);
     depositoCCorrente(ndestino,&PrimeiroPtr,valor);
-
-
 }
