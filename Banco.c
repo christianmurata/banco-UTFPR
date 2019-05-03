@@ -62,7 +62,7 @@ void imprime(RegCCorrentePtr);
 * conta livre disponivel
 */
 
-int contaLivre(RegCCorrentePtr, int);
+int contaLivre(RegCCorrentePtr);
 
 void insereConta(RegCCorrentePtr *);
 
@@ -172,16 +172,40 @@ int main(void)
 /*
 * A fun��o procura o proximo numero de conta disponivel
 */
-int contaLivre(RegCCorrentePtr PrimeiroPtr, int numero)
+int contaLivre(RegCCorrentePtr contaAtual)
 {
-    // primeira conta
-    if(PrimeiroPtr == NULL)
+    // a lista esta vazia
+    if(contaAtual == NULL)
         return 1;
 
-    if(PrimeiroPtr->conta != numero)
-        return 1;
+    RegCCorrentePtr inicioLista = contaAtual;
+    RegCCorrentePtr contaPtrAux = contaAtual;
 
-    return contaLivre(PrimeiroPtr->proxConta, numero + 1) + 1;
+    // primeiro numero conta verificado
+    int numeroConta = 1;
+
+    do{
+        // nao eh possivel cadastrar mais nenhuma conta
+        // lista cheia
+        if(numeroConta > 999){
+            return -1;
+        }
+
+        // numero da conta nao disponivel
+        // verifica o proximo numero de conta
+        if(contaPtrAux->conta == numeroConta){
+            numeroConta++;
+            contaPtrAux = inicioLista;
+            
+            continue;
+        }
+
+        // proxima conta na lista
+        contaPtrAux = contaPtrAux->proxConta;
+
+    } while (contaPtrAux != NULL);
+
+    return numeroConta;
 }
 
 void insereConta(RegCCorrentePtr *Ptrinicial)
@@ -201,7 +225,7 @@ void insereConta(RegCCorrentePtr *Ptrinicial)
 
 
         // cria a nova conta
-        novaConta->conta            = contaLivre(*Ptrinicial,1);
+        novaConta->conta = contaLivre(*Ptrinicial);
 
         dataAtual(novaConta->Dataabertura);
 
