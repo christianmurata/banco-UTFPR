@@ -19,10 +19,11 @@ char Dataabertura[10];
 
 double valorMov;
 double saldoAtual;
+double saldoAnterior;
 double depositoInicial;
 char nome[40];
 char senha[7];
-char cpf[12];
+char cpf[13];
 char rg [10];
 char nascimento[10];
 
@@ -39,7 +40,9 @@ typedef RegCCorrente *RegCCorrentePtr;
 *Prototipo da funcao do menu do funcionario
 */
 
-void menu();
+void menufuncionario ();
+//void opcaofuncionario(int, RegCCorrentePtr);
+void menucliente();
 
 /*
 *Prototipo da funcao que realiza a limpeza de tela
@@ -66,9 +69,9 @@ int contaLivre(RegCCorrentePtr);
 
 void insereConta(RegCCorrentePtr *);
 
-void insereContaMeio(RegCCorrentePtr *, int, char[10], double);
 
-void insereDadosPessoais(RegCCorrentePtr *);
+
+
 
 void excluiCCorrente (RegCCorrentePtr* , int);
 
@@ -93,84 +96,199 @@ RegCCorrente* leCCorrente (void);
 
 void transfereValor(int, int, double,RegCCorrentePtr);
 
+double saldoAtualCCorrente (int, RegCCorrentePtr);
+
+void consultaUltimaMovimentacao (int, RegCCorrentePtr);
+
+void alteraCCorrente            (int, RegCCorrentePtr);
 
 /*
-* Fun��o main do sistema, dentro dessa fun��o
-* ser�o chamadas as fun��es correspondentes
+* Funcao main do sistema, dentro dessa funcao
+* serao chamadas as funcoes correspondentes
 * as funcionalidades selecionadas
 */
 int main(void)
 {
     int opt;
     char data[10];
+    char senhaFuncionario[7]="987654";
+    char senhalida[7];
+    int contateste;
 
     // inicializa a lista encadeada
-    RegCCorrentePtr contas = NULL;
+    RegCCorrentePtr Lista = NULL;
 
     do{
-        // imprime o menu de selecao
-        menu();
-
-        printf("\nDigite sua opcao: ");
-        scanf("%d", &opt);
-
+        clear();
+        cabecalho();
+        printf("Bem Vindo ao sistema do CG BANK!\n");
+        printf("Digite um numero de conta valido:\n");
+        scanf("%d",&contateste);
         fflush(stdin);
 
+        if(contateste==0){
+
+        clear();
+        cabecalho();
+        printf("Digite sua senha de funcionario(a)\n");
+        fgets(senhalida,7,stdin);
+        fflush(stdin);
+        if(strcmp(senhaFuncionario,senhalida)==0)
+        {
+
+        printf("Senha valida!\n");
+        printf("Abrindo menu do funcionario\n");
+        aguardaTecla();
+
+        do{
+        // imprime o menu de selecao
+        menufuncionario();
+        printf("\nDigite sua opcao: ");
+        scanf("%d", &opt);
+        fflush(stdin);
         switch (opt)
         {
-            // sair
-            case -1:
-                cabecalho();
-                printf("\n------ Obrigado por utilizar nosso sistema! -------");
-                printf("\n       <Pressione qualquer tecla para Sair>        ");
-                break;
-
             // cadastrar
             case 1:
+                clear();
                 cabecalho();
-                insereConta(&contas);
+                insereConta(&Lista);
                 break;
 
             // excluir
             case 2:
-                excluiCCorrente(&contas, 2);
-                break;
 
-            // imprimir conta
+                clear();
+                cabecalho();
+                excluiCCorrente(&Lista, 2);
+                aguardaTecla();
+                break;
+            
             case 3:
+                clear();
                 cabecalho();
-                imprime(contas);
-                break;
-            case 4:
-                cabecalho();
-                depositoCCorrente(1,&contas,1000);
+                alteraCCorrente(2,Lista);
+                aguardaTecla();
+
                 break;
 
-            case 5:
+            // imprimir todas as conta
+            case 4:
+
+                clear();
                 cabecalho();
-                saqueCCorrente(1,&contas,1000);
+                imprime(Lista);
+                aguardaTecla();
+                break;
+            case 5:
+                clear();
+                cabecalho();
+                depositoCCorrente(1,&Lista,1000);
+                aguardaTecla();
+                break;
+
+            case 6:
+                clear();
+                cabecalho();
+                saqueCCorrente(1,&Lista,1000);
+                aguardaTecla();
                 break;
 
             case 7:
+                clear();
                 cabecalho();
-                transfereValor(2,3,500,contas);
+                if(saldoAtualCCorrente(2,Lista)==0)
+                {
+                    printf("Nao foi possivel encontrar a conta\n");
+                }
+                else
+                {
+                    printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(2,Lista));
+                }
+                aguardaTecla();
+                break;
+
+
+            case 8:
+                clear();
+                cabecalho();
+                transfereValor(2,3,500,Lista);
+                aguardaTecla();
+                break;
+
+
+            case 9:
+                clear();
+                cabecalho();
+                consultaUltimaMovimentacao(2,Lista);
+                aguardaTecla();
+                break;
+            // sair
+            case 10:
+                printf("\n------ Obrigado por utilizar nosso sistema! -------");
+                printf("\n       <Pressione qualquer tecla para Sair do menu>        ");
                 break;
 
             default:
+
                 printf("Opcao invalida");
+                getchar();
                 break;
         }
 
+
+        }while(opt!=10);
+
+        aguardaTecla();
+        clear();}
+
+        else  {
+
+        printf("Senha incorreta!\n");
         aguardaTecla();
 
-    } while(opt != -1);
+        }
+
+
+
+        }
+
+        else if (contateste==-1)
+        {   clear();
+            cabecalho();
+            printf("\n------ Obrigado por utilizar nosso sistema! -------");
+                printf("\n   <Pressione qualquer tecla para Sair do programa>        ");
+        }
+
+          else if (contateste>0){
+            RegCCorrentePtr contadestino=obtemCCorrente(contateste,Lista);
+            if(contadestino==NULL)
+            {
+
+                printf("A conta digita nao existe\n");
+                aguardaTecla();
+                clear();
+            }
+
+            else
+            {
+                cabecalho();
+                printf("Digite a senha da sua conta de ususario:\n");
+                fgets(senhalida,7,stdin);
+
+            }
+
+          }
+
+
+    } while(contateste != -1);
 
     return 0;
 }
 
 
 /*
-* A fun��o procura o proximo numero de conta disponivel
+* A funcao procura o proximo numero de conta disponivel
 */
 int contaLivre(RegCCorrentePtr contaAtual)
 {
@@ -178,7 +296,7 @@ int contaLivre(RegCCorrentePtr contaAtual)
     if(contaAtual == NULL)
         return 1;
 
-    RegCCorrentePtr inicioLista = contaAtual;
+    //RegCCorrentePtr inicioLista = contaAtual;
     RegCCorrentePtr contaPtrAux = contaAtual;
 
     // primeiro numero conta verificado
@@ -195,9 +313,9 @@ int contaLivre(RegCCorrentePtr contaAtual)
         // verifica o proximo numero de conta
         if(contaPtrAux->conta == numeroConta){
             numeroConta++;
-            contaPtrAux = inicioLista;
-            
-            continue;
+            //contaPtrAux = inicioLista;
+
+
         }
 
         // proxima conta na lista
@@ -208,7 +326,7 @@ int contaLivre(RegCCorrentePtr contaAtual)
     return numeroConta;
 }
 
-void insereConta(RegCCorrentePtr *Ptrinicial)
+void insereConta(RegCCorrentePtr *Lista)
 {
     RegCCorrentePtr novaConta;//Nova conta a ser criada
 
@@ -216,20 +334,20 @@ void insereConta(RegCCorrentePtr *Ptrinicial)
 
     RegCCorrentePtr Contaanterior;
 
-    novaConta = leCCorrente(); //Aloca memoria para a proxima conta
+    novaConta = leCCorrente(); //Le os dados de uma conta
 
     //Verifica se existe memoria disponivel
     if(novaConta!=NULL){
 
-        // leitura dos dados pessoais
 
 
-        // cria a nova conta
-        novaConta->conta = contaLivre(*Ptrinicial);
 
-        dataAtual(novaConta->Dataabertura);
+        // Gera do numero da conta
+        novaConta->conta = contaLivre(*Lista);
 
-        Contaatual = *Ptrinicial;
+
+
+        Contaatual = *Lista;
 
         novaConta->proxConta = NULL;
         Contaanterior        = NULL;
@@ -244,10 +362,10 @@ void insereConta(RegCCorrentePtr *Ptrinicial)
 
         if(Contaanterior == NULL){
 
-            novaConta->proxConta = *Ptrinicial;
+            novaConta->proxConta = *Lista;
 
 
-            *Ptrinicial = novaConta;
+            *Lista = novaConta;
         }
 
         else
@@ -257,41 +375,43 @@ void insereConta(RegCCorrentePtr *Ptrinicial)
         }
     }
 
-    else//caso n�o houver memoria
+    /*else//caso nao houver memoria
     {
         printf("Sem memoria pra alocar");
-    }
+    }*/
 
 }
 
-void excluiCCorrente (RegCCorrentePtr *PrimeiroPtr, int nconta)
+void excluiCCorrente (RegCCorrentePtr *Lista, int nconta)
 {
 
    RegCCorrentePtr Contadestino;
    RegCCorrentePtr Contaanterior;
    RegCCorrentePtr lixo;
 
-   if(PrimeiroPtr==NULL) //Caso da lista estar vazia
-   {    
+   if(*Lista==NULL) //Caso da lista estar vazia
+   {
        printf("Nao ha contas registradas");
        return ;
-       
+
    }
 
+   Contadestino  = obtemCCorrente(nconta,*Lista);
+   Contaanterior = obtemCCorrente(nconta-1,*Lista);
+
    //Deleta primeira conta da lista
-  if (nconta == (*PrimeiroPtr)->conta)
+  if (nconta == (*Lista)->conta)
 
    {
        RegCCorrentePtr aux;
-       aux= *PrimeiroPtr;
-       *PrimeiroPtr=(*PrimeiroPtr)->proxConta;
+       aux= *Lista;
+       *Lista=(*Lista)->proxConta;
        free(aux);
 
    }
-   
+
     /* Deleta a conta caso ela nao esteja no comeco da lista*/
-   Contadestino  = obtemCCorrente(nconta,*PrimeiroPtr);
-   Contaanterior = obtemCCorrente(nconta-1,*PrimeiroPtr);
+
 
 
     if(Contadestino !=NULL)
@@ -301,11 +421,17 @@ void excluiCCorrente (RegCCorrentePtr *PrimeiroPtr, int nconta)
         free(lixo);
     }
 
+    else
+    {
+        cabecalho();
+        printf("A conta digitada nao existe\n");
+    }
+
 }
 
-void imprime(RegCCorrentePtr contaAtual){
+void imprime(RegCCorrentePtr Lista){
     // verifica se a lista nao esta vazia
-    if(contaAtual == NULL){
+    if(Lista == NULL){
         printf("\nA lista esta vazia!");
 
         return;
@@ -314,31 +440,33 @@ void imprime(RegCCorrentePtr contaAtual){
 
     printf("\n---------------------------------------------------------------");
     printf("\n---------------------- Dados Pessoais -------------------------");
-    printf("\nNome              : %s", contaAtual->nome);
-    printf("\nRG                : %s", contaAtual->rg);
-    printf("\nCPF               : %s", contaAtual->cpf);
-    printf("\nData de Nascimento: %s", contaAtual->nascimento);
+    printf("\nNome              : %s", Lista->nome);
+    printf("\nRG                : %s", Lista->rg);
+    printf("\nCPF               : %s", Lista->cpf);
+    printf("\nData de Nascimento: %s", Lista->nascimento);
 
 
     // imprime os dados da conta
     printf("\n---------------------- Dados da conta -------------------------");
-    printf("\nNumero da Conta : %d",   contaAtual->conta);
-    printf("\nData Abertura   : %s",   contaAtual->Dataabertura);
-    printf("\nSaldo atual     : %.2f", contaAtual->saldoAtual);
-    printf("\nDeposito Inicial: %.2f", contaAtual->depositoInicial);
-    printf("\nTipo da conta   : %c", contaAtual->tipoConta);
-
+    printf("\nNumero da Conta : %d",   Lista->conta);
+    printf("\nData Abertura   : %s",   Lista->Dataabertura);
+    printf("\nSaldo atual     : %.2lf", Lista->saldoAtual);
+    printf("\nDeposito Inicial: %.2lf", Lista->depositoInicial);
+    printf("\nTipo da conta   : %c",   Lista->tipoConta);
+    printf("\nValor da ultima movimentacao: %.2lf", Lista->valorMov);
+    printf("\nTipo de movimentacao:   : %c",   Lista->tipoMov);
+    printf("\nData da ultima movientacao: %s", Lista->DataMov);
     // verifica se existe mais elementos na lista
-    // se n�o houver, para a recurs�o
-    if(contaAtual->proxConta == NULL)
+    // se nao houver, para a recursao
+    if(Lista->proxConta == NULL)
         return;
 
     // se houver, imprime
-    imprime(contaAtual->proxConta);
+    imprime(Lista->proxConta);
 }
 
 void cabecalho(){
-    clear();
+
 
     printf("---------------------------------------------------------------\n");
     printf("        ,-----. ,----.    ,--.                   ,--.          \n");
@@ -350,24 +478,36 @@ void cabecalho(){
     printf("---------------------------------------------------------------\n");
 }
 
-void menu(){
+void menufuncionario(){
     clear();
     cabecalho();
 
+
     printf("\n---------------------------------------------------------------");
     printf("\n----------------------- Bem Vindo! ----------------------------");
-    printf("\n|                1 - cadastrar conta                          |");
+    printf("\n|                1 - Cadastrar conta                          |");
     printf("\n|                2 - Excluir conta corrente                   |");
-    printf("\n|                3 - Consultar dados da conta                 |");
-    printf("\n|                4 - Deposito                                 |");
-    printf("\n|                5 - Saque                                    |");
-    printf("\n|                6 - consultar saldo                          |");
-    printf("\n|                7 - Trasferencia entre contas                |");
-    printf("\n|                8 - Dados da ultima movimentacao             |");
+    printf("\n|                3 - Alterar dados da conta corrente          |");
+    printf("\n|                4 - Consultar dados da conta                 |");
+    printf("\n|                5 - Deposito                                 |");
+    printf("\n|                6 - Saque                                    |");
+    printf("\n|                7 - consultar saldo                          |");
+    printf("\n|                8 - Trasferencia entre contas                |");
+    printf("\n|                9 - Dados da ultima movimentacao             |");
     printf("\n|                                                             |");
-    printf("\n|             (-1) - sair                                     |");
+    printf("\n|               10 - Sair so menu do funcionario              |");
     printf("\n---------------------------------------------------------------");
+
+
+
+
 }
+
+void menucliente()
+{
+
+}
+
 
 void clear(){
     #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
@@ -392,26 +532,62 @@ void addZero(char data[2]){
 void depositoCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double deposito )
 {
     RegCCorrentePtr Contadestino=obtemCCorrente(nconta,*Ptrinicial);
-    
-    Contadestino->saldoAtual=Contadestino->saldoAtual+deposito;
+    if(*Ptrinicial==NULL)
+    {
+        printf("Nao ha contas registradas\n");
+    }
+    else
+    {
+        if(Contadestino==NULL)
+        {
+            printf("A conta digitada nao existe\n");
+        }
+        else
+        {
+            Contadestino->valorMov= deposito;
+            Contadestino->saldoAnterior=Contadestino->saldoAtual;
+            dataAtual(Contadestino->DataMov);
+            Contadestino->tipoMov='D';
+            Contadestino->saldoAtual=Contadestino->saldoAtual+deposito;
+
+        }
+    }
 }
 
 int saqueCCorrente(int nconta,RegCCorrentePtr* Ptrinicial, double saque)
 {
-    RegCCorrentePtr Contadestino= obtemCCorrente(nconta,*Ptrinicial);
-
-
-    if(Contadestino->tipoConta=='C'&&Contadestino->saldoAtual-saque<0){ 
-        return 0; 
-    }
-
-    else if(Contadestino->tipoConta=='E'&&Contadestino->saldoAtual-saque<-1000){
-        return 0;
+    RegCCorrentePtr Contadestino;
+    if(*Ptrinicial==NULL)
+    {
+        printf("Nao ha contas registradas\n");
     }
 
     else{
-        Contadestino->saldoAtual=Contadestino->saldoAtual-saque;
-        return 1;
+        RegCCorrentePtr Contadestino= obtemCCorrente(nconta,*Ptrinicial);
+
+        if(Contadestino==NULL)
+        {
+                printf("A conta digitada nao existe\n");
+        }
+        else{
+                if(Contadestino->tipoConta=='C'&&Contadestino->saldoAtual-saque<0){
+                return 0;
+                }
+
+                else if(Contadestino->tipoConta=='E'&&Contadestino->saldoAtual-saque<-1000){
+                return 0;
+                }
+
+                else{
+                        Contadestino->valorMov=saque;
+                        Contadestino->saldoAnterior=Contadestino->saldoAtual;
+                        dataAtual(Contadestino->DataMov);
+                        Contadestino->tipoMov='C';
+
+                        Contadestino->saldoAtual=Contadestino->saldoAtual-saque;
+                return 1;
+                }
+        }
     }
 
 }
@@ -427,19 +603,31 @@ void dataAtual(char data[10]){
 
 RegCCorrente * obtemCCorrente(int nconta, RegCCorrentePtr Primeiroptr)
 {
-    RegCCorrentePtr percorrelista;
+    RegCCorrentePtr percorrelista=NULL;
 
-    RegCCorrentePtr anterior;
+    RegCCorrentePtr anterior=NULL;
 
-    percorrelista=Primeiroptr;
-
-    while(percorrelista!=NULL && percorrelista->conta!=nconta)
+    if(Primeiroptr==NULL)
     {
-        anterior=percorrelista;
-        percorrelista=percorrelista->proxConta;
+        return NULL;
     }
 
-    return percorrelista;
+    else{
+    percorrelista=Primeiroptr;
+
+    while(percorrelista!=NULL)
+    {
+        if(percorrelista->conta==nconta)
+        {
+
+            return percorrelista;
+        }
+        anterior=percorrelista;
+        percorrelista=percorrelista->proxConta;
+
+    }
+
+    return percorrelista;}
 
 }
 
@@ -450,14 +638,18 @@ RegCCorrente* leCCorrente (void)
 
     //NovaConta->conta=contaLivre(1,Headlist) sem idea se o numero da conta deve ser obtido aqui
 
+    dataAtual(NovaConta->Dataabertura);
+
     printf("Digite o saldo inicial da conta:\n");
 
     scanf("%lf",&NovaConta->depositoInicial);
 
     fflush(stdin);
-
+    NovaConta->tipoMov='D';
+    dataAtual(NovaConta->DataMov);
     NovaConta->saldoAtual=NovaConta->depositoInicial;
-
+    NovaConta->saldoAnterior=NovaConta->depositoInicial;
+    NovaConta->valorMov=NovaConta->depositoInicial;
     if(NovaConta->depositoInicial>=10000)
         NovaConta->tipoConta='E';
 
@@ -465,27 +657,27 @@ RegCCorrente* leCCorrente (void)
         NovaConta->tipoConta='C';
 
     printf("\nNome: ");
-    gets(NovaConta->nome);
+    fgets(NovaConta->nome,40,stdin);
 
     fflush(stdin);
 
     printf("\nRg: ");
-    gets(NovaConta->rg);
+    fgets(NovaConta->rg,10,stdin);
 
     fflush(stdin);
 
     printf("\nCPF: ");
-    gets(NovaConta->cpf);
+    fgets(NovaConta->cpf,13,stdin);
 
     fflush(stdin);
 
     printf("\nData de Nascimento: ");
-    gets(NovaConta->nascimento);
+    fgets(NovaConta->nascimento,10,stdin);
 
     fflush(stdin);
 
     printf("\nEscolha uma senha: ");
-    gets(NovaConta->senha);
+    fgets(NovaConta->senha,7,stdin);
 
     fflush(stdin);
 
@@ -495,8 +687,156 @@ RegCCorrente* leCCorrente (void)
     return NovaConta;
 }
 
+
+
 void transfereValor(int norigem, int ndestino, double valor,RegCCorrentePtr PrimeiroPtr)
 {
     saqueCCorrente(norigem,&PrimeiroPtr,valor);
-    depositoCCorrente(ndestino,&PrimeiroPtr,valor);
+    if(saqueCCorrente(norigem,&PrimeiroPtr,valor)==0)
+    {
+        printf("Nao eh possivel fazer a transferencia.\n");
+    }
+    else{
+    depositoCCorrente(ndestino,&PrimeiroPtr,valor);}
+}
+
+double saldoAtualCCorrente (int nconta, RegCCorrentePtr Lista)
+{
+   RegCCorrentePtr ContaDestino;
+   if(Lista==NULL)
+   {
+
+       return 0;
+   }
+   else{
+        RegCCorrentePtr ContaDestino=obtemCCorrente(nconta,Lista);
+        if(ContaDestino==NULL)
+        {
+             return 0;
+        }
+
+        else
+        {
+            return ContaDestino->saldoAtual;
+        }
+   }
+
+
+}
+
+void consultaUltimaMovimentacao (int nconta, RegCCorrentePtr Lista)
+{
+    RegCCorrentePtr ContaDestino=obtemCCorrente(nconta,Lista);
+    if(Lista==NULL)
+    {
+        printf("Nao ha contas regitradas\n");
+    }
+    else
+    {
+        
+    RegCCorrentePtr ContaDestino=obtemCCorrente(nconta,Lista);
+    if(ContaDestino==NULL)
+        {
+            printf("A conta Digitada nao existe\n");
+        }
+    else{
+
+    
+        printf("Banco NOME DO GRUPO DE ALUNOS\n");
+        printf("Av. Alberto Carazzai, 1640 - Centro - CEP: 86300-000 - Cornelio Procopio, PR\n");
+        printf("--------------------------------------------------------------------------------------------------\n");
+        printf("Conta Corrente: %d - Tipo: %c\n",ContaDestino->conta,ContaDestino->tipoConta);
+        printf("Data atual: %s\n",ContaDestino->Dataabertura);
+        printf("Nome do cliente: %s\n",ContaDestino->nome);
+        printf("CPF: %s  RG: %s\n",ContaDestino->cpf,ContaDestino->rg);
+        printf("--------------------------------------------------------------------------------------------------\n");
+        printf("Saldo anterior: R$ %.2lf\n",ContaDestino->saldoAnterior);
+        printf("--------------------------------------------------------------------------------------------------\n");
+        printf("Data Ult. Mov | Tipo Operacao | Valor Movim.\n");
+        printf("%s    | %c| %.2lf\n",ContaDestino->DataMov,ContaDestino->tipoMov,ContaDestino->valorMov);
+    }
+
+    }
+}
+
+void alteraCCorrente            (int nconta, RegCCorrentePtr Lista)
+{
+    int opt;
+    double depaux;
+    char nomeaux[10];
+    char senhaaux[7];
+    RegCCorrentePtr ContaDestino;
+    if(Lista==NULL)
+    {
+        printf("Nao ha contas cadastradas\n");
+    }
+
+    else
+    {
+        ContaDestino=obtemCCorrente(nconta,Lista);
+        
+        if(ContaDestino==NULL)
+        {
+            printf("A conta digitada nao existe\n");
+        }
+
+        else
+        {
+            do
+            { 
+                clear();
+                cabecalho();
+            
+                
+                
+                 printf("\n|                1 - Nome do Usuario                         |");
+                 printf("\n|                2 - Deposito Inicial                        |");
+                 printf("\n|                3 - Senha do usuario                        |");
+                 printf("\n|                4 - Sair do menu                            |");
+                printf("\nDigite qual apecto da conta deseja alterar:\n");
+                scanf("%d",&opt);
+                fflush(stdin);
+                switch (opt)
+                {
+                    case 1:
+                        printf("Digite o novo nome do usuario:\n");
+                        fgets(ContaDestino->nome,40,stdin);
+                        fflush(stdin);
+                        aguardaTecla();
+                       
+                        break;
+                    
+                    case 2:
+                        printf("Digite o novo deposito inicial:\n");
+                        scanf("%lf",&ContaDestino->depositoInicial);
+                        fflush(stdin);
+                        aguardaTecla();
+                        break;
+                    case 3:
+                        printf("Digite a nova senha do usuario:\n");
+                        fgets(ContaDestino->senha,7,stdin);
+                        fflush(stdin);
+                        aguardaTecla();
+                        break;
+                    
+                    case 4:
+                        printf("Saindo do menu\n");
+                        aguardaTecla();
+                        break;
+                    default:
+                        printf("Opcao invalida\n");
+                        aguardaTecla();
+                        break;
+                }
+
+
+            } while (opt!=4);
+            
+            
+        }
+        
+    }
+
+
+
 }
