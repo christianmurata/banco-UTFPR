@@ -1,12 +1,23 @@
+/**
+ * Banco de credito - CG Bank
+ * O projeto consite em um sistema bancario em que um funcionario previamente
+ * cadastrado tem acesso a todas as funcionalidades do sistema, como cadastrar
+ * um cliente, por exemplo. O usuário comum (cliente) do sistema tem acesso ao
+ * sistema após o cadastro de um numero de conta e senha válidos por parte do
+ * funcionário.
+ * 
+ * funcionalidades do sistema:
+ * 
+ * @author Gabriel Perino
+ * @author Christian Murata
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-/*
-* Estrutura que corresponde ao registro de
-* uma conta bancaria
-*/
+// dados conta corrente
 
 struct regCCorrente
 {
@@ -30,83 +41,58 @@ struct regCCorrente
     struct regCCorrente *proxConta;
 };
 
+// cria os tipos de dados de conta corrente
+
 typedef struct regCCorrente RegCCorrente;
 
 typedef RegCCorrente *RegCCorrentePtr;
 
-/*
-*Prototipo da funcao do menu do funcionario
-*/
-
-void menufuncionario();
-//void opcaofuncionario(int opt, RegCCorrentePtr Lista);
-
-/*
-*Prototipo da funcao do menu do cliente
-*/
-
-void menucliente();
+// Prototipo das funcoes gerais do sistema
 
 void trim();
-
 void clear();
-
+void clear();
 void cabecalho();
-
 void aguardaTecla();
-
 void addZero(char[2]);
-
 void dataAtual(char[10]);
 
+// Prototipo das funcoes menu
+
+void menucliente();
+void menufuncionario();
+
+// Prototipo das funcoes de saida de dados
+
 void imprime(RegCCorrentePtr Lista);
-
-/*
-* Prototipo da funcao que retorna o numero da proxima
-* conta livre disponivel
-*/
-
-int contaLivre(RegCCorrentePtr Lista);
-
-void insereConta(RegCCorrentePtr* Lista);
-
-void excluiCCorrente(RegCCorrentePtr* Lista, int nconta);
-
-/*
-* Prototipo da funcao do que reliza o deposito de uma conta
-* bancaria se tendo o numero desta conta
-*/
-
-void depositoCCorrente(int nconta, RegCCorrentePtr Lista, double deposito);
-
-/*
-* Prototipo da funcao do que reliza o saque de uma conta
-* bancaria se tendo o numero desta conta
-*/
-
-int saqueCCorrente(int nconta, RegCCorrentePtr Lista, double saque);
-
-RegCCorrentePtr obtemCCorrente(int nconta, RegCCorrentePtr Lista);
-
-RegCCorrentePtr obtemCCorrenteAnterior(int nconta, RegCCorrentePtr Lista);
-
-RegCCorrentePtr leCCorrente(void);
-
-void transfereValor(int nOrigem, int nDestino, double valor, RegCCorrentePtr Lista);
+void consultaCCorrente(int nconta, RegCCorrentePtr Lista);
+void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista);
 
 double saldoAtualCCorrente(int nconta, RegCCorrentePtr Lista);
 
-void consultaCCorrente(int nconta, RegCCorrentePtr Lista);
+// Protoipo das funcoes de insercao, alteracao e exclusao de conta
 
-void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista);
-
+void insereConta(RegCCorrentePtr* Lista);
 void alteraCCorrente(int nconta, RegCCorrentePtr Lista);
+void excluiCCorrente(RegCCorrentePtr* Lista, int nconta);
 
-/*
-* Funcao main do sistema, dentro dessa funcao
-* serao chamadas as funcoes correspondentes
-* as funcionalidades selecionadas
-*/
+
+// Prototipo das funcoes de movimentacao
+
+int saqueCCorrente(int nconta, RegCCorrentePtr Lista, double saque);
+
+void transfereValor(int nOrigem, int nDestino, double valor, RegCCorrentePtr Lista);
+void depositoCCorrente(int nconta, RegCCorrentePtr Lista, double deposito);
+
+// Prototipo das funcoes "auxiliares" para algumas das funcoes acima
+
+int contaLivre(RegCCorrentePtr Lista);
+
+RegCCorrentePtr leCCorrente(void);
+RegCCorrentePtr obtemCCorrente(int nconta, RegCCorrentePtr Lista);
+RegCCorrentePtr obtemCCorrenteAnterior(int nconta, RegCCorrentePtr Lista);
+
+
 int main(void)
 {
     int opt;
@@ -239,11 +225,7 @@ int main(void)
                         printf("\n       <Pressione qualquer tecla para Sair do menu>\n        ");
                         break;
 
-
-
-
                     case 11:
-
                         clear();
                         cabecalho();
                         imprime(Lista);
@@ -399,8 +381,11 @@ int main(void)
     return 0;
 }
 
-/*
-* A funcao procura o proximo numero de conta disponivel
+/**
+ * Verifica qual e o proximo numero de conta livre na lista e o retorna
+ * 
+ * @param  {RegCCorrentePtr} contaAtual
+ * @return {int} numeroConta
 */
 int contaLivre(RegCCorrentePtr contaAtual)
 {
@@ -513,6 +498,7 @@ void excluiCCorrente(RegCCorrentePtr* Lista, int nconta)
         RegCCorrentePtr aux;
         aux = *Lista;
         *Lista = (*Lista)->proxConta;
+
         free(aux);
     }
 
@@ -559,6 +545,7 @@ void imprime(RegCCorrentePtr Lista)
     printf("\nValor da ultima movimentacao: %.2lf", Lista->valorMov);
     printf("\nTipo de movimentacao:   : %c", Lista->tipoMov);
     printf("\nData da ultima movientacao: %s", Lista->DataMov);
+
     // verifica se existe mais elementos na lista
     // se nao houver, para a recursao
     if (Lista->proxConta == NULL)
