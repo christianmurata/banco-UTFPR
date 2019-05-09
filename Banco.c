@@ -289,27 +289,27 @@ void inicializa(RegCCorrentePtr Lista)
                             // deposito do usuario
                             case 1:
                                 cabecalho();
-                                depositoCCorrente(contateste,Lista,1000);
+                                depositoCCorrente(contalida,Lista,1000);
                                 
                                 break;
 
                             // saque do usuario
                             case 2:
                                 cabecalho();
-                                saqueCCorrente(contateste,Lista,1000);
+                                saqueCCorrente(contalida,Lista,1000);
                                 
                                 break;
 
                             //cosulta de saldo do usuario
                             case 3:
                                 cabecalho();
-                                if (saldoAtualCCorrente(contateste, Lista) == 0)
+                                if (saldoAtualCCorrente(contalida, Lista) == 0)
                                 {
                                     printf("Nao foi possivel encontrar a conta\n");
                                 }
                                 else
                                 {
-                                    printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(contateste, Lista));
+                                    printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(contalida, Lista));
                                 }
 
                                 break;
@@ -317,14 +317,14 @@ void inicializa(RegCCorrentePtr Lista)
                             // transferencia do usuario
                             case 4:
                                 cabecalho();
-                                transfereValor(contateste, 3, 500, Lista);
+                                transfereValor(contalida, 3, 500, Lista);
                                 
                                 break;
                                 
                             // Consulta da ultima movimentacao do usuario
                             case 5:
                                 cabecalho();
-                                consultaUltimaMovimentacao(contateste, Lista);
+                                consultaUltimaMovimentacao(contalida, Lista);
                                 
                                 break;
 
