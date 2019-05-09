@@ -379,7 +379,7 @@ int contaLivre(RegCCorrentePtr contaAtual)
     {
         // nao eh possivel cadastrar mais nenhuma conta
         // lista cheia
-        if (numeroConta >= 3)
+        if (numeroConta >= 999)
         {
             return -1;
         }
