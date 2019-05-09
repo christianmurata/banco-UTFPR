@@ -124,7 +124,6 @@ void inicializa(RegCCorrentePtr Lista){
 
     do
     {
-        clear();
         cabecalho();
 
         printf("Bem Vindo ao sistema do CG BANK!\n");
@@ -133,12 +132,8 @@ void inicializa(RegCCorrentePtr Lista){
         
         limpaBuffer();
 
-        aguardaTecla();
-
         if (contateste == 0)
         {
-
-            clear();
             cabecalho();
 
             printf("Digite sua senha de funcionario(a)\n");
@@ -146,15 +141,8 @@ void inicializa(RegCCorrentePtr Lista){
             
             limpaBuffer();
 
-            aguardaTecla();
-
             if (strcmp(senhaFuncionario, senhalida) == 0)
             {
-
-                printf("Senha valida!\n");
-                printf("Abrindo menu do funcionario\n");
-                aguardaTecla();
-
                 do
                 {
                     // imprime o menu de selecao
@@ -165,59 +153,47 @@ void inicializa(RegCCorrentePtr Lista){
                     
                     limpaBuffer();
 
-
-                    aguardaTecla();
-
                     switch (opt)
                     {
                         // cadastrar
                         case 1:
-                            clear();
                             cabecalho();
                             insereConta(&Lista);
                             break;
 
                         // excluir
                         case 2:
-                            clear();
                             cabecalho();
                             excluiCCorrente(&Lista, 2);
-                            aguardaTecla();
+
                             break;
 
                         case 3:
-                            clear();
                             cabecalho();
                             alteraCCorrente(2, Lista);
-                            aguardaTecla();
 
                             break;
 
                         // imprimir todas as conta
                         case 4:
-
-                            clear();
                             cabecalho();
                             consultaCCorrente(2,Lista);
-                            getchar();
+
                             break;
 
                         case 5:
-                            clear();
                             cabecalho();
                             depositoCCorrente(1, Lista, 1000);
-                            aguardaTecla();
+
                             break;
 
                         case 6:
-                            clear();
                             cabecalho();
                             saqueCCorrente(1, Lista, 1000);
-                            aguardaTecla();
+
                             break;
 
                         case 7:
-                            clear();
                             cabecalho();
 
                             if (saldoAtualCCorrente(2, Lista) == 0)
@@ -229,45 +205,37 @@ void inicializa(RegCCorrentePtr Lista){
                                 printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(2, Lista));
                             }
 
-                            aguardaTecla();
                             break;
 
                         case 8:
-                            clear();
                             cabecalho();
                             transfereValor(2, 3, 500, Lista);
-                            aguardaTecla();
                             break;
 
                         case 9:
-                            clear();
                             cabecalho();
                             consultaUltimaMovimentacao(2, Lista);
-                            aguardaTecla();
                             break;
 
                         // sair
                         case 10:
-                            printf("\n------ Obrigado por utilizar nosso sistema! -------");
                             printf("\n       <Pressione qualquer tecla para Sair do menu>\n        ");
                             break;
 
                         case 11:
-                            clear();
                             cabecalho();
                             imprime(Lista);
-                            getchar();
                             break;
 
                         default:
                             printf("Opcao invalida");
-                            aguardaTecla();
                             break;
                         }
 
+                        aguardaTecla();
+
                 } while (opt != 10);
 
-                aguardaTecla();
                 clear();
             }
 
@@ -281,10 +249,10 @@ void inicializa(RegCCorrentePtr Lista){
 
         else if (contateste == -1)
         {
-            clear();
             cabecalho();
             printf("\n------ Obrigado por utilizar nosso sistema! -------");
             printf("\n   <Pressione qualquer tecla para Sair do programa>\n        ");
+            aguardaTecla();
         }
 
         else if (contateste > 0)
@@ -296,26 +264,20 @@ void inicializa(RegCCorrentePtr Lista){
 
                 printf("A conta digita nao existe\n");
                 aguardaTecla();
-                clear();
             }
 
             else
             {
                 cabecalho();
-                printf("Digite a senha da sua conta de ususario:\n");
+
+                printf("Digite a senha da sua conta de usuario:\n");
                 fgets(senhalida, sizeof(senhalida), stdin);
 
+                limpaBuffer();
                 trim(senhalida);
-
-                aguardaTecla();
 
                 if (strcmp(contadestino->senha, senhalida) == 0)
                 {
-                    printf("Senha valida!\n");
-                    printf("Abrindo menu do cliente\n");
-
-                    aguardaTecla();
-
                     do
                     {
                         menucliente();
@@ -325,30 +287,24 @@ void inicializa(RegCCorrentePtr Lista){
                         
                         limpaBuffer();
 
-
-                        aguardaTecla();
-
                         switch (opt)
                         {
                             // deposito do usuario
                             case 1:
-                                clear();
                                 cabecalho();
                                 depositoCCorrente(contateste,Lista,1000);
-                                aguardaTecla();
+                                
                                 break;
 
                             // saque do usuario
                             case 2:
-                                clear();
                                 cabecalho();
                                 saqueCCorrente(contateste,Lista,1000);
-                                aguardaTecla();
+                                
                                 break;
 
                             //cosulta de saldo do usuario
                             case 3:
-                                clear();
                                 cabecalho();
                                 if (saldoAtualCCorrente(contateste, Lista) == 0)
                                 {
@@ -358,42 +314,41 @@ void inicializa(RegCCorrentePtr Lista){
                                 {
                                     printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(contateste, Lista));
                                 }
-                                aguardaTecla();
+
                                 break;
 
                             // transferencia do usuario
                             case 4:
-
-                                clear();
                                 cabecalho();
                                 transfereValor(contateste, 3, 500, Lista);
-                                aguardaTecla();
+                                
                                 break;
                                 
                             // Consulta da ultima movimentacao do usuario
                             case 5:
-                                clear();
                                 cabecalho();
                                 consultaUltimaMovimentacao(contateste, Lista);
-                                aguardaTecla();
+                                
                                 break;
 
                             // sair
                             case 6:
-                                printf("\n------ Obrigado por utilizar nosso sistema! -------");
                                 printf("\n       <Pressione qualquer tecla para Sair do menu>\n        ");
-                                aguardaTecla();
+                                
                                 break;
 
 
                             default:
                                 printf("Opcao invalida");
-                                aguardaTecla();
+                                
                                 break;
                         }
 
+                        aguardaTecla();
+
                     } while (opt != 6);
                 }
+
                 else
                 {
                     printf("A senha digita esta incorreta\n");
@@ -847,7 +802,9 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
     char NomeAlterado[10];
     char senhaAlterada[7];
     char tipoAlterado;
+
     RegCCorrentePtr ContaDestino;
+
     if (Lista == NULL)
     {
         printf("Nao ha contas cadastradas\n");
@@ -866,7 +823,6 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
         {
             do
             {
-                clear();
                 cabecalho();
 
                 printf("\n|                1 - Nome do Usuario                         |");
@@ -879,15 +835,12 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
                 
                 limpaBuffer();
 
-                aguardaTecla();
-
                 switch (opt)
                 {
                     case 1:
                         printf("Digite o novo nome do usuario:\n");
                         fgets(ContaDestino->nome, 40, stdin);
-                        limpaBuffer();                    
-                        aguardaTecla();
+                        limpaBuffer();
 
                         break;
 
@@ -895,19 +848,21 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
                         printf("Digite o novo deposito inicial:\n");
                         scanf("%lf", &ContaDestino->depositoInicial);
                         limpaBuffer();
-                        aguardaTecla();
+                        
                         break;
                     case 3:
                         printf("Digite a nova senha do usuario:\n");
                         fgets(ContaDestino->senha, 7, stdin);
-                        limpaBuffer();                    
-                        aguardaTecla();
+                        limpaBuffer();
+
                         break;
 
                     case 4:
                         printf("Digite o novo tipo da conta\n");
                         scanf("%c", &tipoAlterado);
-                        aguardaTecla();
+                        
+                        limpaBuffer();
+
                         if (tipoAlterado != 'E' && tipoAlterado != 'C')
                         {
                             printf("Tipo de conta invalido\n");
@@ -920,13 +875,15 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
 
                     case 5:
                         printf("Saindo do menu\n");
-                        aguardaTecla();
+
                         break;
                     default:
                         printf("Opcao invalida\n");
-                        aguardaTecla();
+
                         break;
                 }
+
+                aguardaTecla();
 
             } while (opt != 4);
         }
@@ -972,6 +929,8 @@ void imprime(RegCCorrentePtr Lista)
 
 void cabecalho()
 {
+    clear();
+
 
     printf("---------------------------------------------------------------\n");
     printf("        ,-----. ,----.    ,--.                   ,--.          \n");
