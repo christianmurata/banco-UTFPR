@@ -120,6 +120,9 @@ void inicializa(RegCCorrentePtr Lista)
     char senhaFuncionario[7] = "987654";
     char senhalida[7];
     int contalida;
+    int contaParametro1;
+    int contaParametro2;
+    double valorlido;
 
     do
     {
@@ -163,71 +166,113 @@ void inicializa(RegCCorrentePtr Lista)
                         // excluir
                         case 2:
                             cabecalho();
-                            excluiCCorrente(&Lista, 2);
+                            printf("Digite a conta que deseja deletar:\n");
+                            scanf("%d",&contaParametro1);
+                            limpaBuffer();
+                            excluiCCorrente(&Lista, contaParametro1);
 
                             break;
-
+                        // Altera dados da conta
                         case 3:
                             cabecalho();
-                            alteraCCorrente(2, Lista);
+                            printf("Digite a conta que deseja alterar\n");
+                            scanf("%d",&contaParametro1);
+                            limpaBuffer();
+                            alteraCCorrente(contaParametro1, Lista);
 
                         break;
 
-                        // imprimir todas as conta
+                        // Consulta uma conta selecionada
                         case 4:
                             cabecalho();
-                            consultaCCorrente(2,Lista);
+                            printf("Digite a conta que deseja consultar\n");
+                            scanf("%d",&contaParametro1);
+                            limpaBuffer();
+                            consultaCCorrente(contaParametro1,Lista);
 
                             break;
-
+                        //Deposito em uma Conta Corrente
                         case 5:
                             cabecalho();
-                            depositoCCorrente(1, Lista, 1000);
+                            printf("Digite a conta que ira relizar o deposito:\n");
+                            scanf("%d",&contaParametro1);
+                            limpaBuffer();
+                            printf("Digite o valor do deposito:\n");
+                            scanf("%lf",&valorlido);
+                            limpaBuffer();
+                            depositoCCorrente(contaParametro1, Lista, valorlido);
 
                             break;
 
+                        //Saque de uma Conta Corrente
                         case 6:
                             cabecalho();
-                            saqueCCorrente(1, Lista, 1000);
+                            printf("Digite a conta que ira relizar o saque:\n");
+                            scanf("%d",&contaParametro1);
+                            limpaBuffer();
+                            printf("Digite o valor do saque:\n");
+                            scanf("%lf",&valorlido);
+                            limpaBuffer();
+                            saqueCCorrente(contaParametro1, Lista, valorlido);
 
                             break;
-
+                        //Verifica saldo atual
                         case 7:
                             cabecalho();
-
-                        if (saldoAtualCCorrente(2, Lista) == 0)
-                        {
-                            printf("Nao foi possivel encontrar a conta\n");
-                        }
-                        else
-                        {
-                            printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(2, Lista));
-                        }
+                            
+                            printf("Digite a conta a qual deseja verificar o saldo atual:\n");
+                            scanf("%d",&contaParametro1);
+                            limpaBuffer();
+                            if (saldoAtualCCorrente(contaParametro1, Lista) == 0)
+                            {
+                                printf("Nao foi possivel encontrar a conta\n");
+                            }
+                            else
+                            {
+                                printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(contaParametro1, Lista));
+                            }
 
                             break;
 
+                        //transferencia entre duas contas
                         case 8:
                             cabecalho();
-                            transfereValor(2, 3, 500, Lista);
+                            printf("Digite a conta origem da transferencia:\n");
+                            scanf("%d", &contaParametro1);
+                            limpaBuffer();
+                            printf("Digite a conta destino da transferencia:\n");
+                            scanf("%d", &contaParametro2);
+                            limpaBuffer();
+                            printf("Digite o valor da transferencia:\n");
+                            scanf("%lf",&valorlido);
+                            limpaBuffer();
+                            transfereValor(contaParametro1,contaParametro2,valorlido,Lista);
                             break;
 
+                        //consulta a ultimamovimentacao da conta
                         case 9:
                             cabecalho();
-                            consultaUltimaMovimentacao(2, Lista);
+                            printf("Digite a conta que deseja verificar:\n");
+                            scanf("%d",&contaParametro1);
+                            limpaBuffer();
+                            consultaUltimaMovimentacao(contaParametro1, Lista);
                             break;
 
                         // sair
                         case 10:
+                            limpaBuffer();
                             printf("\n       <Pressione qualquer tecla para Sair do menu>\n        ");
                             break;
 
                         case 11:
                             cabecalho();
+                            limpaBuffer();
                             imprime(Lista);
                             break;
 
                         default:
                             printf("Opcao invalida");
+                            limpaBuffer();
                             break;
                         }
 
@@ -283,26 +328,34 @@ void inicializa(RegCCorrentePtr Lista)
 
                         printf("\nDigite sua opcao: ");
                         scanf("%d", &opt);
+                        limpaBuffer();
 
                         switch (opt)
                         {
                             // deposito do usuario
                             case 1:
                                 cabecalho();
-                                depositoCCorrente(contalida,Lista,1000);
+                                printf("Digite o valor que deseja depositar:\n");
+                                scanf("%lf",&valorlido);
+                                limpaBuffer();
+                                depositoCCorrente(contalida,Lista,valorlido);
                                 
                                 break;
 
                             // saque do usuario
                             case 2:
                                 cabecalho();
-                                saqueCCorrente(contalida,Lista,1000);
+                                printf("Digite o valor que deseja sacar:\n");
+                                scanf("%lf",&valorlido);
+                                limpaBuffer();
+                                saqueCCorrente(contalida,Lista,valorlido);
                                 
                                 break;
 
                             //cosulta de saldo do usuario
                             case 3:
                                 cabecalho();
+                                
                                 if (saldoAtualCCorrente(contalida, Lista) == 0)
                                 {
                                     printf("Nao foi possivel encontrar a conta\n");
@@ -317,20 +370,29 @@ void inicializa(RegCCorrentePtr Lista)
                             // transferencia do usuario
                             case 4:
                                 cabecalho();
-                                transfereValor(contalida, 3, 500, Lista);
+                                printf("Digite a conta para a qual deseja tranferir:\n");
+                                scanf("&d",&contaParametro1);
+                                limpaBuffer();
+                                printf("Digite o valor que deseja transferir:\n");
+                                scanf("%lf",&valorlido);
+                                limpaBuffer();
+                                transfereValor(contalida, contaParametro1, valorlido, Lista);
                                 
                                 break;
                                 
                             // Consulta da ultima movimentacao do usuario
                             case 5:
                                 cabecalho();
+                                
                                 consultaUltimaMovimentacao(contalida, Lista);
+                                
                                 
                                 break;
 
                             // sair
                             case 6:
                                 printf("\n       <Pressione qualquer tecla para Sair do menu>\n        ");
+                                
                                 
                                 break;
 
