@@ -128,20 +128,18 @@ void inicializa(RegCCorrentePtr Lista)
     {
         cabecalho();
 
-        printf("Bem Vindo ao sistema do CG BANK!\n");
-        printf("Digite um numero de conta valido:\n");
+        printf("\nBem Vindo ao sistema do CG BANK!");
+        printf("\nDigite um numero de conta valido: ");
         scanf("%d", &contalida);
 
         limpaBuffer();
-
-        aguardaTecla();
 
         if (contalida == 0)
         {
             cabecalho();
 
-            printf("Digite sua senha de funcionario(a)\n");
-            fgets(senhalida, 7, stdin);
+            printf("\nDigite sua senha de funcionario(a): ");
+            fgets(senhalida, sizeof(senhalida), stdin);
 
             limpaBuffer();
 
@@ -160,46 +158,56 @@ void inicializa(RegCCorrentePtr Lista)
                         // cadastrar
                         case 1:
                             cabecalho();
+
                             insereConta(&Lista);
+
                             break;
 
                         // excluir
                         case 2:
                             cabecalho();
-                            printf("Digite a conta que deseja deletar:\n");
+                            printf("\nDigite a conta que deseja deletar:");
                             scanf("%d",&contaParametro1);
                             limpaBuffer();
+
                             excluiCCorrente(&Lista, contaParametro1);
 
                             break;
+
                         // Altera dados da conta
                         case 3:
                             cabecalho();
-                            printf("Digite a conta que deseja alterar\n");
+                            printf("\nDigite a conta que deseja alterar: ");
                             scanf("%d",&contaParametro1);
                             limpaBuffer();
+
                             alteraCCorrente(contaParametro1, Lista);
 
-                        break;
+                            break;
 
                         // Consulta uma conta selecionada
                         case 4:
                             cabecalho();
-                            printf("Digite a conta que deseja consultar\n");
+                            printf("\nDigite a conta que deseja consultar: ");
                             scanf("%d",&contaParametro1);
                             limpaBuffer();
+
                             consultaCCorrente(contaParametro1,Lista);
 
                             break;
+
                         //Deposito em uma Conta Corrente
                         case 5:
                             cabecalho();
-                            printf("Digite a conta que ira relizar o deposito:\n");
+
+                            printf("\nDigite a conta que ira relizar o deposito: ");
                             scanf("%d",&contaParametro1);
                             limpaBuffer();
-                            printf("Digite o valor do deposito:\n");
+
+                            printf("\nDigite o valor do deposito: ");
                             scanf("%lf",&valorlido);
                             limpaBuffer();
+
                             depositoCCorrente(contaParametro1, Lista, valorlido);
 
                             break;
@@ -207,22 +215,31 @@ void inicializa(RegCCorrentePtr Lista)
                         //Saque de uma Conta Corrente
                         case 6:
                             cabecalho();
-                            printf("Digite a conta que ira relizar o saque:\n");
+
+                            printf("\nDigite a conta que ira relizar o saque: ");
                             scanf("%d",&contaParametro1);
                             limpaBuffer();
-                            printf("Digite o valor do saque:\n");
+
+                            printf("\nDigite o valor do saque: ");
                             scanf("%lf",&valorlido);
                             limpaBuffer();
-                            saqueCCorrente(contaParametro1, Lista, valorlido);
 
+                            if(!saqueCCorrente(contaParametro1, Lista, valorlido))
+                                printf("\nNao e possivel o realizar o saque!");
+
+                            else
+                                printf("\nSaque realizado com sucesso!");
+                            
                             break;
+
                         //Verifica saldo atual
                         case 7:
                             cabecalho();
                             
-                            printf("Digite a conta a qual deseja verificar o saldo atual:\n");
+                            printf("\nDigite a conta a qual deseja verificar o saldo atual: ");
                             scanf("%d",&contaParametro1);
                             limpaBuffer();
+
                             if (saldoAtualCCorrente(contaParametro1, Lista) == 0)
                             {
                                 printf("Nao foi possivel encontrar a conta\n");
@@ -237,31 +254,38 @@ void inicializa(RegCCorrentePtr Lista)
                         //transferencia entre duas contas
                         case 8:
                             cabecalho();
-                            printf("Digite a conta origem da transferencia:\n");
+
+                            printf("\nDigite a conta origem da transferencia: ");
                             scanf("%d", &contaParametro1);
                             limpaBuffer();
-                            printf("Digite a conta destino da transferencia:\n");
+
+                            printf("\nDigite a conta destino da transferencia: ");
                             scanf("%d", &contaParametro2);
                             limpaBuffer();
-                            printf("Digite o valor da transferencia:\n");
+
+                            printf("\nDigite o valor da transferencia: ");
                             scanf("%lf",&valorlido);
                             limpaBuffer();
+
                             transfereValor(contaParametro1,contaParametro2,valorlido,Lista);
+
                             break;
 
                         //consulta a ultimamovimentacao da conta
                         case 9:
                             cabecalho();
-                            printf("Digite a conta que deseja verificar:\n");
+                            printf("\nDigite a conta que deseja verificar: ");
                             scanf("%d",&contaParametro1);
                             limpaBuffer();
+
                             consultaUltimaMovimentacao(contaParametro1, Lista);
+
                             break;
 
                         // sair
                         case 10:
                             limpaBuffer();
-                            printf("\n       <Pressione qualquer tecla para Sair do menu>\n        ");
+                            // printf("\nPressione qualquer tecla para Sair do menu");
                             break;
 
                         case 11:
@@ -285,7 +309,6 @@ void inicializa(RegCCorrentePtr Lista)
 
             else
             {
-
                 printf("Senha incorreta!\n");
                 aguardaTecla();
             }
@@ -295,7 +318,6 @@ void inicializa(RegCCorrentePtr Lista)
         {
             cabecalho();
             printf("\n------ Obrigado por utilizar nosso sistema! -------");
-            printf("\n   <Pressione qualquer tecla para Sair do programa>\n        ");
             aguardaTecla();
         }
 
@@ -314,7 +336,7 @@ void inicializa(RegCCorrentePtr Lista)
             {
                 cabecalho();
 
-                printf("Digite a senha da sua conta de usuario:\n");
+                printf("\nDigite a senha da sua conta de usuario: ");
                 fgets(senhalida, sizeof(senhalida), stdin);
 
                 limpaBuffer();
@@ -335,7 +357,7 @@ void inicializa(RegCCorrentePtr Lista)
                             // deposito do usuario
                             case 1:
                                 cabecalho();
-                                printf("Digite o valor que deseja depositar:\n");
+                                printf("\nDigite o valor que deseja depositar: ");
                                 scanf("%lf",&valorlido);
                                 limpaBuffer();
                                 depositoCCorrente(contalida,Lista,valorlido);
@@ -345,10 +367,15 @@ void inicializa(RegCCorrentePtr Lista)
                             // saque do usuario
                             case 2:
                                 cabecalho();
-                                printf("Digite o valor que deseja sacar:\n");
+                                printf("\nDigite o valor que deseja sacar: ");
                                 scanf("%lf",&valorlido);
                                 limpaBuffer();
-                                saqueCCorrente(contalida,Lista,valorlido);
+                                
+                                if(!saqueCCorrente(contalida, Lista, valorlido))
+                                    printf("\nNao e possivel o realizar o saque!");
+
+                                else
+                                    printf("\nSaque realizado com sucesso!");
                                 
                                 break;
 
@@ -370,12 +397,14 @@ void inicializa(RegCCorrentePtr Lista)
                             // transferencia do usuario
                             case 4:
                                 cabecalho();
-                                printf("Digite a conta para a qual deseja tranferir:\n");
+                                printf("\nDigite a conta para a qual deseja tranferir: ");
                                 scanf("&d",&contaParametro1);
                                 limpaBuffer();
-                                printf("Digite o valor que deseja transferir:\n");
+
+                                printf("\nDigite o valor que deseja transferir: ");
                                 scanf("%lf",&valorlido);
                                 limpaBuffer();
+
                                 transfereValor(contalida, contaParametro1, valorlido, Lista);
                                 
                                 break;
@@ -383,15 +412,13 @@ void inicializa(RegCCorrentePtr Lista)
                             // Consulta da ultima movimentacao do usuario
                             case 5:
                                 cabecalho();
-                                
                                 consultaUltimaMovimentacao(contalida, Lista);
-                                
                                 
                                 break;
 
                             // sair
                             case 6:
-                                printf("\n       <Pressione qualquer tecla para Sair do menu>\n        ");
+                                // printf("\nSaindo do menu");
                                 
                                 
                                 break;
@@ -517,6 +544,8 @@ void insereConta(RegCCorrentePtr *Lista)
                 Contaanterior->proxConta = novaConta;
                 novaConta->proxConta = Contaatual;
             }
+
+            printf("\nConta cadastrada com sucesso!");
         }
     }
 
@@ -553,10 +582,9 @@ void excluiCCorrente(RegCCorrentePtr *Lista, int nconta)
         free(aux);
     }
 
-    /* Deleta a conta caso ela nao esteja no comeco da lista*/
-
-    if (Contadestino != NULL)
-    {
+    // Deleta a conta caso ela nao esteja no comeco da lista
+    else if (Contadestino != NULL)
+    {   
         lixo = Contadestino;
         Contaanterior->proxConta = Contadestino->proxConta;
         free(lixo);
@@ -572,6 +600,7 @@ void excluiCCorrente(RegCCorrentePtr *Lista, int nconta)
 void depositoCCorrente(int nconta, RegCCorrentePtr Ptrinicial, double deposito)
 {
     RegCCorrentePtr Contadestino = obtemCCorrente(nconta, Ptrinicial);
+    
     if (Ptrinicial == NULL)
     {
         printf("Nao ha contas registradas\n");
@@ -580,7 +609,7 @@ void depositoCCorrente(int nconta, RegCCorrentePtr Ptrinicial, double deposito)
     {
         if (Contadestino == NULL)
         {
-            printf("A conta digitada nao existe\n");
+            printf("A conta digitada nao existe!\n");
         }
         else
         {
@@ -589,6 +618,8 @@ void depositoCCorrente(int nconta, RegCCorrentePtr Ptrinicial, double deposito)
             dataAtual(Contadestino->DataMov);
             Contadestino->tipoMov = 'D';
             Contadestino->saldoAtual = Contadestino->saldoAtual + deposito;
+
+            printf("\nDeposito realizado com sucesso!");
         }
     }
 }
@@ -598,7 +629,8 @@ int saqueCCorrente(int nconta, RegCCorrentePtr Ptrinicial, double saque)
     RegCCorrentePtr Contadestino;
     if (Ptrinicial == NULL)
     {
-        printf("Nao ha contas registradas\n");
+        return 0;
+        // printf("Nao ha contas registradas\n");
     }
 
     else
@@ -700,7 +732,7 @@ RegCCorrentePtr leCCorrente(void)
     RegCCorrentePtr NovaConta = malloc(sizeof(RegCCorrente));
     NovaConta->proxConta = NULL;
 
-    printf("Digite o saldo inicial da conta:\n");
+    printf("\nDigite o saldo inicial da conta: ");
 
     scanf("%lf", &NovaConta->depositoInicial);
 
@@ -755,17 +787,18 @@ RegCCorrentePtr leCCorrente(void)
 
     limpaBuffer();
 
-    printf("\nPressione <ENTER> para confirmar");
+    // printf("\nPressione <ENTER> para confirmar");
 
     return NovaConta;
 }
 
 void transfereValor(int nOrigem, int nDestino, double valor, RegCCorrentePtr Lista)
 {
-    saqueCCorrente(nOrigem, Lista, valor);
-    if (saqueCCorrente(nOrigem, Lista, valor) == 0)
+    // saqueCCorrente(nOrigem, Lista, valor);
+
+    if (!saqueCCorrente(nOrigem, Lista, valor))
     {
-        printf("Nao eh possivel fazer a transferencia.\n");
+        printf("Nao e possivel fazer a transferencia.\n");
     }
     else
     {
@@ -813,18 +846,19 @@ void consultaCCorrente(int nconta, RegCCorrentePtr Lista)
         }
         else
         {
+            cabecalho();
 
-            printf("Banco NOME DO GRUPO DE ALUNOS\n");
-            printf("Av. Alberto Carazzai, 1640 - Centro - CEP: 86300-000 - Cornelio Procopio, PR\n");
-            printf("--------------------------------------------------------------------------------------------------\n");
+            printf("Banco Christian e Gabriel\n");
+            printf("Av. Alberto Carazzai, 1640 - Centro - CEP: 86300-000 - CP, PR\n");
+            printf("---------------------------------------------------------------\n");
             printf("Conta Corrente: %d - Tipo: %c\n", ContaDestino->conta, ContaDestino->tipoConta);
             printf("Data de abertura: %s\n", ContaDestino->Dataabertura);
             printf("Nome do cliente: %s      Senha do Cliente: %s\n", ContaDestino->nome, ContaDestino->senha);
             printf("CPF: %s  RG: %s\n", ContaDestino->cpf, ContaDestino->rg);
             printf("Data de nascimento do cliente: %s\n", ContaDestino->nascimento);
-            printf("--------------------------------------------------------------------------------------------------\n");
+            printf("---------------------------------------------------------------\n");
             printf("Saldo anterior: R$ %.2lf\n", ContaDestino->saldoAnterior);
-            printf("--------------------------------------------------------------------------------------------------\n");
+            printf("---------------------------------------------------------------\n");            
             printf("Data Ult. Mov | Tipo Operacao | Valor Movim.\n");
             printf("%s      | %c| %.2lf\n", ContaDestino->DataMov, ContaDestino->tipoMov, ContaDestino->valorMov);
             printf("Saldo atual: R$ %.2lf\n", ContaDestino->saldoAtual);
@@ -848,6 +882,7 @@ void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista)
         }
         else
         {
+            cabecalho();
 
             printf("Banco Christian e Gabriel \n");
             printf("Av. Alberto Carazzai, 1640 - Centro - CEP: 86300-000 - CP, PR  \n");
@@ -897,12 +932,13 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
             {
                 cabecalho();
 
-                printf("\n|                1 - Nome do Usuario                         |");
-                printf("\n|                2 - Deposito Inicial                        |");
-                printf("\n|                3 - Senha do usuario                        |");
-                printf("\n|                4 - Tipo da conta do usuario                |");
-                printf("\n|                5 - Sair do menu                            |");
-                printf("\nDigite qual apecto da conta deseja alterar:\n");
+                printf("|                1 - Nome do Usuario                         |\n");
+                printf("|                2 - Deposito Inicial                        |\n");
+                printf("|                3 - Senha do usuario                        |\n");
+                printf("|                4 - Tipo da conta do usuario                |\n");
+                printf("|                5 - Sair do menu                            |\n");
+                printf("--------------------------------------------------------------\n");
+                printf("Digite qual aspecto da conta deseja alterar: ");
                 scanf("%d", &opt);
 
                 limpaBuffer();
@@ -910,27 +946,27 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
                 switch (opt)
                 {
                     case 1:
-                        printf("Digite o novo nome do usuario:\n");
+                        printf("\nDigite o novo nome do usuario: ");
                         fgets(ContaDestino->nome, 40, stdin);
                         limpaBuffer();
 
                     break;
 
                     case 2:
-                        printf("Digite o novo deposito inicial:\n");
+                        printf("\nDigite o novo deposito inicial: ");
                         scanf("%lf", &ContaDestino->depositoInicial);
                         limpaBuffer();
                         
                         break;
                     case 3:
-                        printf("Digite a nova senha do usuario:\n");
+                        printf("\nDigite a nova senha do usuario: ");
                         fgets(ContaDestino->senha, 7, stdin);
                         limpaBuffer();
 
                         break;
 
                     case 4:
-                        printf("Digite o novo tipo da conta\n");
+                        printf("\nDigite o novo tipo da conta: ");
                         scanf("%c", &tipoAlterado);
                         
                         limpaBuffer();
@@ -949,15 +985,16 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
                         printf("Saindo do menu\n");
 
                         break;
+
                     default:
                         printf("Opcao invalida\n");
 
                         break;
                 }
 
-                aguardaTecla();
+                // aguardaTecla();
 
-            } while (opt != 4);
+            } while (opt != 5);
         }
     }
 }
@@ -1019,20 +1056,20 @@ void menufuncionario()
     clear();
     cabecalho();
 
-    printf("\n---------------------------------------------------------------");
-    printf("\n----------------------- Bem Vindo! ----------------------------");
-    printf("\n|                1 - Cadastrar conta                          |");
-    printf("\n|                2 - Excluir conta corrente                   |");
-    printf("\n|                3 - Alterar dados da conta corrente          |");
-    printf("\n|                4 - Consultar dados da conta                 |");
-    printf("\n|                5 - Deposito                                 |");
-    printf("\n|                6 - Saque                                    |");
-    printf("\n|                7 - consultar saldo                          |");
-    printf("\n|                8 - Trasferencia entre contas                |");
-    printf("\n|                9 - Dados da ultima movimentacao             |");
-    printf("\n|                                                             |");
-    printf("\n|               10 - Sair so menu do funcionario              |");
-    printf("\n---------------------------------------------------------------");
+    // printf("---------------------------------------------------------------\n");
+    printf("----------------------- Bem Vindo! ----------------------------\n");
+    printf("|                1 - Cadastrar conta                          |\n");
+    printf("|                2 - Excluir conta corrente                   |\n");
+    printf("|                3 - Alterar dados da conta corrente          |\n");
+    printf("|                4 - Consultar dados da conta                 |\n");
+    printf("|                5 - Deposito                                 |\n");
+    printf("|                6 - Saque                                    |\n");
+    printf("|                7 - consultar saldo                          |\n");
+    printf("|                8 - Trasferencia entre contas                |\n");
+    printf("|                9 - Dados da ultima movimentacao             |\n");
+    printf("|                                                             |\n");
+    printf("|               10 - Sair so menu do funcionario              |\n");
+    printf("---------------------------------------------------------------\n");
 }
 
 void menucliente()
@@ -1040,16 +1077,16 @@ void menucliente()
     clear();
     cabecalho();
 
-    printf("\n---------------------------------------------------------------");
-    printf("\n----------------------- Bem Vindo! ----------------------------");
-    printf("\n|                1 - Deposito                                 |");
-    printf("\n|                2 - Saque                                    |");
-    printf("\n|                3 - consultar saldo                          |");
-    printf("\n|                4 - Trasferencia entre contas                |");
-    printf("\n|                5 - Dados da ultima movimentacao             |");
-    printf("\n|                                                             |");
-    printf("\n|                6 - Sair so menu do cliente                  |");
-    printf("\n---------------------------------------------------------------");
+    // printf("---------------------------------------------------------------\n");
+    printf("----------------------- Bem Vindo! ----------------------------\n");
+    printf("|                1 - Deposito                                 |\n");
+    printf("|                2 - Saque                                    |\n");
+    printf("|                3 - consultar saldo                          |\n");
+    printf("|                4 - Trasferencia entre contas                |\n");
+    printf("|                5 - Dados da ultima movimentacao             |\n");
+    printf("|                                                             |\n");
+    printf("|                6 - Sair so menu do cliente                  |\n");
+    printf("---------------------------------------------------------------\n");
 }
 
 void dataAtual(char data[10])
@@ -1075,6 +1112,8 @@ void clear()
 
 void aguardaTecla()
 {
+    printf("\n\n                 Pressione <ENTER> para continuar            ");    
+
     getchar();
     limpaBuffer();
 }
