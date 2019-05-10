@@ -196,7 +196,7 @@ void inicializa(RegCCorrentePtr Lista)
                     // excluir
                     case 2:
                         cabecalho();
-                        printf("\nDigite a conta que deseja deletar:");
+                        printf("\nDigite a conta que deseja deletar: ");
                         scanf("%d", &contaParametro1);
                         limpaBuffer();
 
@@ -236,7 +236,7 @@ void inicializa(RegCCorrentePtr Lista)
 
                         if (obtemCCorrente(contaParametro1, Lista) == NULL)
                         {
-                            printf("A conta digitada nao existe\n");
+                            printf("\nA conta digitada nao existe!");
                         }
 
                         else
@@ -257,7 +257,7 @@ void inicializa(RegCCorrentePtr Lista)
                         limpaBuffer();
                         if (obtemCCorrente(contaParametro1, Lista) == NULL)
                         {
-                            printf("A conta digitada nao existe\n");
+                            printf("\nA conta digitada nao existe!");
                         }
                         else
                         {
@@ -281,13 +281,13 @@ void inicializa(RegCCorrentePtr Lista)
                         scanf("%d", &contaParametro1);
                         limpaBuffer();
 
-                        if (saldoAtualCCorrente(contaParametro1, Lista) == 0)
+                        if (saldoAtualCCorrente(contaParametro1, Lista) == -1)
                         {
-                            printf("Nao foi possivel encontrar a conta\n");
+                            printf("\nNao foi possivel encontrar a conta!");
                         }
                         else
                         {
-                            printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(contaParametro1, Lista));
+                            printf("\nO Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(contaParametro1, Lista));
                         }
 
                         break;
@@ -301,7 +301,7 @@ void inicializa(RegCCorrentePtr Lista)
                         limpaBuffer();
                         if (obtemCCorrente(contaParametro1, Lista) == NULL)
                         {
-                            printf("A conta digitada nao existe\n");
+                            printf("\nA conta digitada nao existe!");
                         }
 
                         else
@@ -312,7 +312,7 @@ void inicializa(RegCCorrentePtr Lista)
                             limpaBuffer();
                             if (obtemCCorrente(contaParametro2, Lista) == NULL)
                             {
-                                printf("A conta digitada nao existe\n");
+                                printf("\nA conta digitada nao existe!");
                             }
                             else
                             {
@@ -349,7 +349,7 @@ void inicializa(RegCCorrentePtr Lista)
                         break;
 
                     default:
-                        printf("Opcao invalida");
+                        printf("\nOpcao invalida!");
                         limpaBuffer();
                         break;
                     }
@@ -363,7 +363,7 @@ void inicializa(RegCCorrentePtr Lista)
 
             else
             {
-                printf("Senha incorreta!\n");
+                printf("\nSenha incorreta!");
                 aguardaTecla();
             }
         }
@@ -382,7 +382,7 @@ void inicializa(RegCCorrentePtr Lista)
             if (contadestino == NULL)
             {
 
-                printf("A conta digita nao existe\n");
+                printf("\nA conta digita nao existe!");
                 aguardaTecla();
             }
 
@@ -437,13 +437,13 @@ void inicializa(RegCCorrentePtr Lista)
                         case 3:
                             cabecalho();
 
-                            if (saldoAtualCCorrente(contalida, Lista) == 0)
+                            if (saldoAtualCCorrente(contalida, Lista) == -1)
                             {
-                                printf("Nao foi possivel encontrar a conta\n");
+                                printf("\nNao foi possivel encontrar a conta");
                             }
                             else
                             {
-                                printf("O Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(contalida, Lista));
+                                printf("\nO Saldo atual da conta eh de: %.2lf", saldoAtualCCorrente(contalida, Lista));
                             }
 
                             break;
@@ -454,9 +454,10 @@ void inicializa(RegCCorrentePtr Lista)
                             printf("\nDigite a conta para a qual deseja tranferir: ");
                             scanf("%d", &contaParametro1);
                             limpaBuffer();
+
                             if (obtemCCorrente(contaParametro1, Lista) == NULL)
                             {
-                                printf("A conta digitada nao existe\n");
+                                printf("\nA conta digitada nao existe!");
                             }
                             else
                             {
@@ -482,7 +483,7 @@ void inicializa(RegCCorrentePtr Lista)
                             break;
 
                         default:
-                            printf("Opcao invalida");
+                            printf("\nOpcao invalida!");
 
                             break;
                         }
@@ -494,7 +495,7 @@ void inicializa(RegCCorrentePtr Lista)
 
                 else
                 {
-                    printf("A senha digita esta incorreta\n");
+                    printf("\nA senha digita esta incorreta!");
                     aguardaTecla();
                 }
             }
@@ -570,7 +571,7 @@ void insereConta(RegCCorrentePtr *Lista)
 
         if (verificaNconta == -1)
         {
-            printf("Impossivel cadastrar mais clientes\n");
+            printf("\nImpossivel cadastrar mais clientes!");
             aguardaTecla();
         }
 
@@ -611,7 +612,7 @@ void insereConta(RegCCorrentePtr *Lista)
 
     else //caso nao houver memoria
     {
-        printf("Impossivel cadastrar mais clientes\n");
+        printf("\nImpossivel cadastrar mais clientes!");
     }
 }
 
@@ -629,13 +630,14 @@ void excluiCCorrente(RegCCorrentePtr *Lista, int nconta)
 
     if (*Lista == NULL) //Caso da lista estar vazia
     {
-        printf("Nao ha contas registradas");
+        printf("\nNao ha contas registradas!");
         return;
     }
     else
     {
         Contadestino = obtemCCorrente(nconta, *Lista);
         Contaanterior = obtemCCorrenteAnterior(nconta, *Lista);
+
         if (Contadestino != NULL)
         {
 
@@ -661,8 +663,8 @@ void excluiCCorrente(RegCCorrentePtr *Lista, int nconta)
 
         else
         {
-            cabecalho();
-            printf("A conta digitada nao existe\n");
+            // cabecalho();
+            printf("\nA conta digitada nao existe!");
         }
     }
 }
@@ -680,13 +682,13 @@ void depositoCCorrente(int nconta, RegCCorrentePtr Lista, double deposito)
 
     if (Lista == NULL)
     {
-        printf("Nao ha contas registradas\n");
+        printf("\nNao ha contas registradas!");
     }
     else
     {
         if (Contadestino == NULL)
         {
-            printf("A conta digitada nao existe!\n");
+            printf("\nA conta digitada nao existe!");
         }
         else
         {
@@ -713,7 +715,7 @@ int saqueCCorrente(int nconta, RegCCorrentePtr Lista, double saque)
     RegCCorrentePtr Contadestino;
     if (Lista == NULL)
     {
-        printf("Nao ha contas registradas\n");
+        printf("\nNao ha contas registradas!");
         return 0;
     }
 
@@ -723,7 +725,7 @@ int saqueCCorrente(int nconta, RegCCorrentePtr Lista, double saque)
 
         if (Contadestino == NULL)
         {
-            printf("A conta digitada nao existe\n");
+            printf("\nA conta digitada nao existe!");
         }
         else
         {
@@ -905,7 +907,7 @@ void transfereValor(int nOrigem, int nDestino, double valor, RegCCorrentePtr Lis
 
     if (Lista == NULL)
     {
-        printf("Nao ha contas registradas\n");
+        printf("\nNao ha contas registradas!");
     }
 
     else
@@ -913,7 +915,7 @@ void transfereValor(int nOrigem, int nDestino, double valor, RegCCorrentePtr Lis
 
         if (!saqueCCorrente(nOrigem, Lista, valor))
         {
-            printf("Nao e possivel fazer a transferencia.\n");
+            printf("\nNao e possivel fazer a transferencia!");
         }
         else
         {
@@ -929,7 +931,7 @@ void transfereValor(int nOrigem, int nDestino, double valor, RegCCorrentePtr Lis
  * @param{int} nconta
  * @param{RegCCorrentePtr} Lista
  * 
- * @return {double} (Contadestino->saldo || 0.0)
+ * @return {double} (Contadestino->saldo || -1)
 */
 double saldoAtualCCorrente(int nconta, RegCCorrentePtr Lista)
 {
@@ -937,14 +939,14 @@ double saldoAtualCCorrente(int nconta, RegCCorrentePtr Lista)
     if (Lista == NULL)
     {
 
-        return 0;
+        return -1;
     }
     else
     {
         RegCCorrentePtr ContaDestino = obtemCCorrente(nconta, Lista);
         if (ContaDestino == NULL)
         {
-            return 0;
+            return -1;
         }
 
         else
@@ -965,7 +967,7 @@ void consultaCCorrente(int nconta, RegCCorrentePtr Lista)
     RegCCorrentePtr ContaDestino = obtemCCorrente(nconta, Lista);
     if (Lista == NULL)
     {
-        printf("Nao ha contas regitradas\n");
+        printf("\nNao ha contas regitradas!");
     }
     else
     {
@@ -973,7 +975,7 @@ void consultaCCorrente(int nconta, RegCCorrentePtr Lista)
         RegCCorrentePtr ContaDestino = obtemCCorrente(nconta, Lista);
         if (ContaDestino == NULL)
         {
-            printf("A conta Digitada nao existe\n");
+            printf("\nA conta Digitada nao existe!");
         }
         else
         {
@@ -1013,7 +1015,7 @@ void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista)
     RegCCorrentePtr ContaDestino = obtemCCorrente(nconta, Lista);
     if (Lista == NULL)
     {
-        printf("Nao ha contas regitradas\n");
+        printf("\nNao ha contas regitradas!");
     }
     else
     {
@@ -1021,7 +1023,7 @@ void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista)
         RegCCorrentePtr ContaDestino = obtemCCorrente(nconta, Lista);
         if (ContaDestino == NULL)
         {
-            printf("A conta Digitada nao existe\n");
+            printf("\nA conta Digitada nao existe!");
         }
         else
         {
@@ -1064,7 +1066,7 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
 
     if (Lista == NULL)
     {
-        printf("Nao ha contas registradas\n");
+        printf("\nNao ha contas registradas!");
     }
 
     else
@@ -1073,7 +1075,7 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
 
         if (ContaDestino == NULL)
         {
-            printf("A conta digitada nao existe\n");
+            printf("\nA conta digitada nao existe!");
         }
 
         else
@@ -1095,56 +1097,56 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
 
                 switch (opt)
                 {
-                case 1:
-                    printf("\nDigite o novo nome do usuario: ");
-                    fgets(ContaDestino->nome, sizeof(ContaDestino->nome), stdin);
-                    trim(ContaDestino->nome);
-                    limpaBuffer();
+                    case 1:
+                        printf("\nDigite o novo nome do usuario: ");
+                        fgets(ContaDestino->nome, sizeof(ContaDestino->nome), stdin);
+                        trim(ContaDestino->nome);
+                        limpaBuffer();
 
-                    break;
+                        break;
 
-                case 2:
-                    printf("\nDigite o novo deposito inicial: ");
-                    scanf("%lf", &ContaDestino->depositoInicial);
-                    limpaBuffer();
+                    case 2:
+                        printf("\nDigite o novo deposito inicial: ");
+                        scanf("%lf", &ContaDestino->depositoInicial);
+                        limpaBuffer();
 
-                    break;
-                case 3:
-                    printf("\nDigite a nova senha do usuario: ");
-                    fgets(ContaDestino->senha, sizeof(ContaDestino->senha), stdin);
-                    trim(ContaDestino->senha);
-                    limpaBuffer();
+                        break;
+                    case 3:
+                        printf("\nDigite a nova senha do usuario: ");
+                        fgets(ContaDestino->senha, sizeof(ContaDestino->senha), stdin);
+                        trim(ContaDestino->senha);
+                        limpaBuffer();
 
-                    break;
+                        break;
 
-                case 4:
-                    printf("\nDigite o novo tipo da conta: ");
-                    scanf("%c",&tipoAlterado);
+                    case 4:
+                        printf("\nDigite o novo tipo da conta: ");
+                        scanf("%c",&tipoAlterado);
 
-                    limpaBuffer();
+                        limpaBuffer();
 
-                    if (tipoAlterado != 'E' && tipoAlterado != 'C')
-                    {
-                        printf("Tipo de conta invalido\n");
-                    }
-                    else
-                    {
-                        ContaDestino->tipoConta = tipoAlterado;
-                    }
-                    break;
+                        if (tipoAlterado != 'E' && tipoAlterado != 'C')
+                        {
+                            printf("\nTipo de conta invalido!");
+                        }
+                        else
+                        {
+                            ContaDestino->tipoConta = tipoAlterado;
+                        }
+                        break;
 
-                case 5:
-                    printf("Saindo do menu\n");
+                    case 5:
+                        printf("\nSaindo do menu!");
 
-                    break;
+                        break;
 
-                default:
-                    printf("Opcao invalida\n");
+                    default:
+                        printf("\nOpcao invalida!");
 
-                    break;
+                        break;
                 }
 
-                 
+                aguardaTecla();
 
             } while (opt != 5);
         }
