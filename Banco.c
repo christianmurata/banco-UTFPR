@@ -452,7 +452,7 @@ void inicializa(RegCCorrentePtr Lista)
                         case 4:
                             cabecalho();
                             printf("\nDigite a conta para a qual deseja tranferir: ");
-                            scanf("&d", &contaParametro1);
+                            scanf("%d", &contaParametro1);
                             limpaBuffer();
                             if (obtemCCorrente(contaParametro1, Lista) == NULL)
                             {
@@ -987,11 +987,12 @@ void consultaCCorrente(int nconta, RegCCorrentePtr Lista)
             printf("Nome do cliente: %s      Senha do Cliente: %s\n", ContaDestino->nome, ContaDestino->senha);
             printf("CPF: %s  RG: %s\n", ContaDestino->cpf, ContaDestino->rg);
             printf("Data de nascimento do cliente: %s\n", ContaDestino->nascimento);
+            printf("Deposito inicial da Conta Corrente: %.2lf\n",ContaDestino->depositoInicial);
             printf("---------------------------------------------------------------\n");
             printf("Saldo anterior: R$ %.2lf\n", ContaDestino->saldoAnterior);
             printf("---------------------------------------------------------------\n");
             printf("Data Ult. Mov | Tipo Operacao | Valor Movim.\n");
-            printf("%s      | %c| %.2lf\n", ContaDestino->DataMov, ContaDestino->tipoMov, ContaDestino->valorMov);
+            printf("%s     | %c             | %.2lf\n", ContaDestino->DataMov, ContaDestino->tipoMov, ContaDestino->valorMov);
             printf("Saldo atual: R$ %.2lf\n", ContaDestino->saldoAtual);
         }
     }
@@ -1037,7 +1038,7 @@ void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista)
             printf("Saldo anterior: R$ %.2lf\n", ContaDestino->saldoAnterior);
             printf("---------------------------------------------------------------\n");
             printf("Data Ult. Mov | Tipo Operacao | Valor Movim.\n");
-            printf("%s      | %c             | %.2lf\n", ContaDestino->DataMov, ContaDestino->tipoMov, ContaDestino->valorMov);
+            printf("%s     | %c             | %.2lf\n", ContaDestino->DataMov, ContaDestino->tipoMov, ContaDestino->valorMov);
             printf("---------------------------------------------------------------\n");
             printf("Saldo atual: R$ %.2lf\n", ContaDestino->saldoAtual);
         }
@@ -1096,7 +1097,8 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
                 {
                 case 1:
                     printf("\nDigite o novo nome do usuario: ");
-                    fgets(ContaDestino->nome, 40, stdin);
+                    fgets(ContaDestino->nome, sizeof(ContaDestino->nome), stdin);
+                    trim(ContaDestino->nome);
                     limpaBuffer();
 
                     break;
@@ -1109,14 +1111,15 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
                     break;
                 case 3:
                     printf("\nDigite a nova senha do usuario: ");
-                    fgets(ContaDestino->senha, 7, stdin);
+                    fgets(ContaDestino->senha, sizeof(ContaDestino->senha), stdin);
+                    trim(ContaDestino->senha);
                     limpaBuffer();
 
                     break;
 
                 case 4:
                     printf("\nDigite o novo tipo da conta: ");
-                    scanf("%c", &tipoAlterado);
+                    scanf("%c",&tipoAlterado);
 
                     limpaBuffer();
 
@@ -1141,7 +1144,7 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
                     break;
                 }
 
-                // aguardaTecla();
+                 
 
             } while (opt != 5);
         }
