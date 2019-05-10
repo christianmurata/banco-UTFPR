@@ -16,8 +16,9 @@
  * VII) Consultar o saldo de uma conta corrente
  * VII) Realizar a movimentacao entre duas contas correntes
  * IX ) Consultar os dados da ultima movimentacao
+ * 
  * @author Gabriel Perino  R.A. :2101360
- * @author Christian Murata R.A.:
+ * @author Christian Murata R.A.: 2101300
 */
 
 #include <stdio.h>
@@ -25,8 +26,10 @@
 #include <string.h>
 #include <time.h>
 
-// dados conta corrente
-
+/**
+ * Dados da conta corrente
+ * 
+*/
 struct regCCorrente
 {
 
@@ -49,14 +52,19 @@ struct regCCorrente
     struct regCCorrente *proxConta;
 };
 
-// cria os tipos de dados de conta corrente
 
+/**
+ * cria os tipos de dados de conta corrente
+ * 
+*/
 typedef struct regCCorrente RegCCorrente;
 
 typedef RegCCorrente *RegCCorrentePtr;
 
-// Prototipo das funcoes gerais do sistema
-
+/**
+ * cria os tipos de dados de conta corrente
+ * 
+*/
 void trim();
 void clear();
 void clear();
@@ -65,33 +73,45 @@ void limpaBuffer();
 void aguardaTecla();
 void dataAtual(char[10]);
 
-// Prototipo das funcoes menu
-
+/**
+ * Prototipo das funcoes menu
+ * 
+*/
 void menucliente();
 void menufuncionario();
 
-// Prototipo das funcoes de saida de dados
-
+/**
+ * Prototipo das funcoes de saida de dados
+ * 
+*/
 void imprime(RegCCorrentePtr Lista);
 void consultaCCorrente(int nconta, RegCCorrentePtr Lista);
 void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista);
 
 double saldoAtualCCorrente(int nconta, RegCCorrentePtr Lista);
 
-// Prototipo das funcoes de insercao, alteracao e exclusao de conta
+/**
+ * Prototipo das funcoes de insercao, alteracao e exclusao de conta
+ * 
+*/
 
 void insereConta(RegCCorrentePtr *Lista);
 void alteraCCorrente(int nconta, RegCCorrentePtr Lista);
 void excluiCCorrente(RegCCorrentePtr *Lista, int nconta);
 
-// Prototipo das funcoes de movimentacao
-
+/**
+ * Prototipo das funcoes de movimentacao
+ * 
+*/
 int saqueCCorrente(int nconta, RegCCorrentePtr Lista, double saque);
 
 void transfereValor(int nOrigem, int nDestino, double valor, RegCCorrentePtr Lista);
 void depositoCCorrente(int nconta, RegCCorrentePtr Lista, double deposito);
 
-// Prototipo das funcoes "auxiliares" para algumas das funcoes acima
+/**
+ * Prototipo das funcoes "auxiliares" para algumas das funcoes acima
+ * 
+*/
 
 int contaLivre(RegCCorrentePtr Lista);
 
@@ -99,7 +119,10 @@ RegCCorrentePtr leCCorrente(void);
 RegCCorrentePtr obtemCCorrente(int nconta, RegCCorrentePtr Lista);
 RegCCorrentePtr obtemCCorrenteAnterior(int nconta, RegCCorrentePtr Lista);
 
-// prototippo das funcoes de funcionamento do sistema
+/**
+ * prototippo das funcoes de funcionamento do sistema
+ * 
+*/
 
 void inicializa(RegCCorrentePtr);
 void liberaMemoria(RegCCorrentePtr);
@@ -527,9 +550,7 @@ int contaLivre(RegCCorrentePtr contaAtual)
  * Insere uma conta em uma lista simplesmente encadeada
  * 
  * @param {RegCCorrentePtr} *Lista
- * 
- * */
-
+*/
 void insereConta(RegCCorrentePtr *Lista)
 {
     RegCCorrentePtr novaConta; //Nova conta a ser criada
@@ -598,9 +619,7 @@ void insereConta(RegCCorrentePtr *Lista)
  * Exclui uma determinda conta corrente dada o seu numero
  * 
  * @param {RegCCorrentePtr} *Lista
- * 
- * */
-
+*/
 void excluiCCorrente(RegCCorrentePtr *Lista, int nconta)
 {
 
@@ -649,13 +668,12 @@ void excluiCCorrente(RegCCorrentePtr *Lista, int nconta)
 }
 
 /**
- * Realiza o deposito em uma conta corrente dado o seu numero e o valor do deposito
+ * Realiza o deposito em uma CC dado o seu numero e o valor do deposito
  * 
  * @param {int} nconta
  * @param {RegCCorrentePtr} Lista
  * @param {double} deposito
- * */
-
+*/
 void depositoCCorrente(int nconta, RegCCorrentePtr Lista, double deposito)
 {
     RegCCorrentePtr Contadestino = obtemCCorrente(nconta, Lista);
@@ -689,8 +707,7 @@ void depositoCCorrente(int nconta, RegCCorrentePtr Lista, double deposito)
  * @param {int} nconta
  * @param {RegCCorrentePtr} Lista
  * @param {double} saque
- * */
-
+*/
 int saqueCCorrente(int nconta, RegCCorrentePtr Lista, double saque)
 {
     RegCCorrentePtr Contadestino;
@@ -741,10 +758,8 @@ int saqueCCorrente(int nconta, RegCCorrentePtr Lista, double saque)
  * @param {int} nconta
  * @param {RegCCorrentePtr} Lista
  * 
- * @return {RegCCorrentePtr} percorrelista se encontrar a conta
- * @return NULL se nao encontar a conta 
- * */
-
+ * @return {RegCCorrentePtr || NULL}
+*/
 RegCCorrentePtr obtemCCorrente(int nconta, RegCCorrentePtr Lista)
 {
     RegCCorrentePtr percorrelista = NULL;
@@ -776,16 +791,14 @@ RegCCorrentePtr obtemCCorrente(int nconta, RegCCorrentePtr Lista)
 }
 
 /**
- * Percorre a lista encadeada ate encontrar a conta que se encontra na posicao anterior da conta digitada
- * Caso nao encontre a conta anterior retorna NULL
+ * Percorre a lista encadeada ate encontrar a conta que se encontra na posicao 
+ * anterior da conta digitada. Caso nao encontre a conta anterior retorna NULL
  * 
  * @param {int} nconta
  * @param {RegCCorrentePtr} Lista
  * 
- * @return {RegCCorrentePtr} anterior se encontrar a conta
- * @return NULL se nao encontar a conta 
- * */
-
+ * @return {RegCCorrentePtr || NULL}
+*/
 RegCCorrentePtr obtemCCorrenteAnterior(int nconta, RegCCorrentePtr Lista)
 {
     RegCCorrentePtr percorrelista = NULL;
@@ -817,16 +830,11 @@ RegCCorrentePtr obtemCCorrenteAnterior(int nconta, RegCCorrentePtr Lista)
 }
 
 /**
+ * Funcao que permite a leitura dos dados de uma conta corrente. Tambem aloca 
+ * memoria necessaria para conta a ser lida
  * 
- * Funcao que permite a leitura dos dados
- * de uma conta corrente
- * 
- * Tambem aloca a memoria necessaria para conta
- * a ser lida
- * 
- * 
- * */
-
+ * @return {RegCCorrentePtr} 
+*/
 RegCCorrentePtr leCCorrente(void)
 {
     RegCCorrentePtr NovaConta = malloc(sizeof(RegCCorrente));
@@ -915,19 +923,14 @@ void transfereValor(int nOrigem, int nDestino, double valor, RegCCorrentePtr Lis
 }
 
 /**
- * Funcao que retorna o valor do saldo de uma conta dado o seu numero
- * 
- * Caso a conta com o numero especificado nao seja encontrada retorna 0
+ * Funcao que retorna o valor do saldo de uma conta dado o seu numero. Caso a 
+ * conta com o numero especificado nao seja encontrada retorna 0
  * 
  * @param{int} nconta
  * @param{RegCCorrentePtr} Lista
  * 
- * 
- * @return {double} Contadestino->saldo se encontrar a  conta
- * @return {double} 0 se nao encontar a conta
- * 
- * */
-
+ * @return {double} (Contadestino->saldo || 0.0)
+*/
 double saldoAtualCCorrente(int nconta, RegCCorrentePtr Lista)
 {
     RegCCorrentePtr ContaDestino;
@@ -956,9 +959,7 @@ double saldoAtualCCorrente(int nconta, RegCCorrentePtr Lista)
  * 
  * @param {int} nconta
  * @param {RegCCorrentePtr} Lista
- * 
- * */
-
+*/
 void consultaCCorrente(int nconta, RegCCorrentePtr Lista)
 {
     RegCCorrentePtr ContaDestino = obtemCCorrente(nconta, Lista);
@@ -997,15 +998,12 @@ void consultaCCorrente(int nconta, RegCCorrentePtr Lista)
 }
 
 /**
- * 
- * Funcao que imprime os dados da ultima movimentacao de uma conta
- * quando se eh dado o seu numero
+ * Funcao que imprime os dados da ultima movimentacao de uma conta quando eh 
+ * dado o seu numero
  * 
  * @param {int} nconta
  * @param {RegCCorrentePtr} Lista
- * 
- * */
-
+*/
 void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista)
 {
     char Dataatual[10];
@@ -1047,14 +1045,12 @@ void consultaUltimaMovimentacao(int nconta, RegCCorrentePtr Lista)
 }
 
 /**
- * 
- * Funcao que permite alterar os dados de uma conta corrente
- * quando se eh fornecido o seu numero
+ * Funcao que permite alterar os dados de uma conta corrente quando eh fornecido
+ * o seu numero
  * 
  * @param {int} nconta
  * @param {RegCCorrentePtr}
- * */
-
+*/
 void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
 {
     int opt;
@@ -1152,6 +1148,12 @@ void alteraCCorrente(int nconta, RegCCorrentePtr Lista)
     }
 }
 
+/**
+ * Imprime uma ou mais (se houver) conta previamente cadastrada, exibe todos os
+ * dados, exceto a senha
+ * 
+ * @param {RegCCorrentePtr} Lista
+*/
 void imprime(RegCCorrentePtr Lista)
 {
     // verifica se a lista nao esta vazia
@@ -1191,8 +1193,8 @@ void imprime(RegCCorrentePtr Lista)
 
 /**
  * Funcao que exibe o cabecalho do projeto
- * */
-
+ * 
+*/
 void cabecalho()
 {
     clear();
@@ -1208,12 +1210,9 @@ void cabecalho()
 }
 
 /**
- * 
  * Funcao que exibe as opcoes do menu do funcionario
  * 
- * 
- * */
-
+*/
 void menufuncionario()
 {
     clear();
@@ -1235,12 +1234,11 @@ void menufuncionario()
     printf("---------------------------------------------------------------\n");
 }
 
+
 /**
- * 
  * Funcao que exibe as opcoes do menu do cliente
  * 
- * */
-
+*/
 void menucliente()
 {
     clear();
@@ -1258,6 +1256,13 @@ void menucliente()
     printf("---------------------------------------------------------------\n");
 }
 
+/**
+ * Retorna a data atual do sistema no formato string. Utiliza a struct time para
+ * obter o dia, mes, ano no formato {int} e os converte em uma string.
+ * EX: 10/5/2019
+ * 
+ * @param {&string} data
+*/
 void dataAtual(char data[10])
 {
     // get data atual
@@ -1269,22 +1274,10 @@ void dataAtual(char data[10])
 }
 
 /**
+ * Funcao que exige uma entrada de dados do teclado, ou seja, para a execucao
+ * do programa ate que o usuario pressione alguma tecla.
  * 
- * Funcao que define o comando de limpeza de tela
- * Explica aqui christian kkkk
- * */
-
-void clear()
-{
-#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-    system("clear");
-#endif
-
-#if defined(_WIN32) || defined(_WIN64)
-    system("cls");
-#endif
-}
-
+*/
 void aguardaTecla()
 {
     printf("\n\n                 Pressione <ENTER> para continuar            ");
@@ -1293,6 +1286,31 @@ void aguardaTecla()
     limpaBuffer();
 }
 
+/**
+ * Limpa a tela do programa
+ * 
+ * #if, #endif - alguns comandos de pre processamento, baseados nas diretivas 
+ * de compilacao. em clear(), por exemplo, o pre procesador C examina o codigo 
+ * fonte e define o comando para limpar a tela de acordo com o SO, antes da
+ * compilacao propriamente dita
+ * 
+ * @see https://pt.wikibooks.org/wiki/Programar_em_C/Pr%C3%A9-processador
+*/
+void clear()
+{
+    #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+        system("clear");
+    #endif
+
+    #if defined(_WIN32) || defined(_WIN64)
+        system("cls");
+    #endif
+}
+
+/**
+ * Limpa o buffer de entrada (stdin) e o buffer de saida (Stdout)
+ * 
+*/
 void limpaBuffer()
 {
     setbuf(stdin, NULL);
